@@ -1,3 +1,18 @@
+:root {
+  --cyan: #3bdcff;
+  --gold: #d4a944;
+  --green: #4dffb4;
+  --bg: #05060a;
+  --surface: #0d0f1a;
+  --surface-2: #111629;
+  --border: #1e2340;
+  --text: #c8ccdc;
+  --muted: #6b7494;
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Rajdhani', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+
 /* RESET */
 * {
   margin: 0;
@@ -6,9 +21,9 @@
 }
 
 body {
-  font-family: "Inter", sans-serif;
-  background: #05060a;
-  color: #e6e6eb;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
   overflow: hidden;
 }
 
@@ -122,10 +137,19 @@ nav {
 
 /* HEADINGS */
 h2 {
-  font-family: "Orbitron", sans-serif;
-  color: #3bdcff;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--cyan);
   margin-bottom: 1.5rem;
-  text-shadow: 0 0 12px rgba(59, 220, 255, 0.4);
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 12px rgba(59, 220, 255, 0.3);
+}
+
+.muted {
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
 }
 
 /* HINT */
