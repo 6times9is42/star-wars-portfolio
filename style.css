@@ -520,3 +520,111 @@ h2 {
   color: var(--muted);
   text-align: center;
 }
+
+/* ===== BLOG / TRANSMISSIONS ===== */
+.transmissions {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  margin-top: 2rem;
+}
+
+.transmission-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  padding: 1.4rem 1.6rem;
+  transition: border-left-color 0.3s, box-shadow 0.3s;
+  text-align: left;
+}
+.transmission-card:hover {
+  border-left-color: var(--cyan);
+  box-shadow: 0 0 20px rgba(59, 220, 255, 0.07);
+}
+
+.tx-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.75rem;
+}
+.tx-id {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+}
+.tx-date {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+.tx-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: #e8ecff;
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+}
+
+.tx-excerpt {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 1rem;
+}
+
+.tx-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tx-status {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.tx-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.25; }
+}
+
+.tx-read {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--cyan);
+  cursor: pointer;
+  opacity: 0.7;
+}
+.tx-read:hover { opacity: 1; }
+
+.tx-incoming {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-align: center;
+  padding: 1rem;
+  border: 1px dashed var(--border);
+  animation: flicker 4s ease-in-out infinite;
+}
+@keyframes flicker {
+  0%, 90%, 100% { opacity: 0.5; }
+  91% { opacity: 0.15; }
+  93% { opacity: 0.6; }
+  95% { opacity: 0.2; }
+}
