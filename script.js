@@ -1,5 +1,5 @@
 /* ========= HERO TYPING ========= */
-const heroText = "Hi, I’m Yashvardhan";
+const heroText = "Hi, I'm Yashvardhan";
 const typed = document.getElementById("typed-text");
 let charIndex = 0;
 
@@ -188,8 +188,9 @@ function jumpTo(index) {
   }, 1400);
 }
 
-/* CLICK ANYWHERE → NEXT */
+/* CLICK ANYWHERE → NEXT (guards against projects screen) */
 document.body.addEventListener("click", () => {
+  if (screens[currentScreen].id === "projects") return;
   if (currentScreen < screens.length - 1) {
     jumpTo(currentScreen + 1);
   }
@@ -214,74 +215,35 @@ document.querySelectorAll('.cta-btn').forEach(btn => {
   });
 });
 
-document.querySelectorAll(".flip-card").forEach(card => {
-  card.addEventListener("click", e => {
-    e.stopPropagation(); // 🚫 prevent hyperspace jump
-    card.classList.toggle("flipped");
-  });
-});
+/* ========= PROJECT INFINITE SCROLL ========= */
+const scrollTrack = document.getElementById('scroll-track');
+let scrollPos = 0;
+let scrollVel = 0.35;
+const MIN_VEL = 0.35;
 
-document.body.addEventListener("click", () => {
-  if (currentScreen === screens.findIndex(s => s.id === "projects")) return;
-  if (currentScreen < screens.length - 1) {
-    jumpTo(currentScreen + 1);
-  }
-});
+function animateScroll() {
+  scrollVel *= 0.97;
+  if (Math.abs(scrollVel) < MIN_VEL) scrollVel = MIN_VEL;
 
+  scrollPos += scrollVel;
 
-/* ========= FLIP CARDS (PROJECTS ONLY) ========= */
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".flip-card").forEach(card => {
-    card.addEventListener("click", e => {
-      e.stopPropagation(); // prevent hyperspace jump
-      card.classList.toggle("flipped");
-    });
-  });
-});
+  const half = scrollTrack.scrollWidth / 2;
+  if (scrollPos >= half) scrollPos -= half;
+  if (scrollPos < 0) scrollPos += half;
 
-/* ========= PREVENT PROJECT SCREEN AUTO-JUMP ========= */
-document.body.addEventListener("click", () => {
-  if (screens[currentScreen].id === "projects") return;
-  if (currentScreen < screens.length - 1) {
-    jumpTo(currentScreen + 1);
-  }
-});
-
-/* ========= HORIZONTAL INFINITE SCROLL (FIXED) ========= */
-
-const track = document.querySelector(".scroll-track");
-
-let position = 0;
-let velocity = 0.25; // BASE SPEED (NON-ZERO)
-const FRICTION = 0.94;
-
-function animateHorizontal() {
-  position += velocity;
-
-  const halfWidth = track.scrollWidth / 2;
-
-  if (position >= halfWidth) {
-    position -= halfWidth;
-  }
-
-  track.style.transform = `translate3d(${-position}px, 0, 0)`;
-
-  requestAnimationFrame(animateHorizontal);
+  scrollTrack.style.transform = `translate3d(${-scrollPos}px, 0, 0)`;
+  requestAnimationFrame(animateScroll);
 }
 
-animateHorizontal();
+animateScroll();
 
-/* Mouse wheel momentum */
-track.parentElement.addEventListener(
-  "wheel",
-  e => {
-    e.preventDefault();
-    velocity += e.deltaY * 0.002;
-  },
-  { passive: false }
-);
+/* Mouse wheel adds momentum */
+document.querySelector('.horizontal-scroll').addEventListener('wheel', e => {
+  e.preventDefault();
+  scrollVel += e.deltaY * 0.003;
+}, { passive: false });
 
-/* Stop hyperspace jump on card click */
-document.querySelectorAll(".project-card").forEach(card => {
-  card.addEventListener("click", e => e.stopPropagation());
+/* Card clicks don't trigger hyperspace */
+document.querySelectorAll('.project-card').forEach(card => {
+  card.addEventListener('click', e => e.stopPropagation());
 });
