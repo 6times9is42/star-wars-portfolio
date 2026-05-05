@@ -128,7 +128,12 @@ function runTerminal() {
   let i = 0;
 
   function next() {
-    if (i >= termLines.length) return;
+    if (i >= termLines.length) {
+      const cursor = document.createElement('span');
+      cursor.className = 'terminal-cursor';
+      output.appendChild(cursor);
+      return;
+    }
     const line = termLines[i++];
     const el = document.createElement('div');
     el.className = 't-line';
