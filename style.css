@@ -42,6 +42,7 @@ nav {
   padding: 1.2rem 2rem;
   z-index: 10;
   backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(59, 220, 255, 0.1);
 }
 
 .nav-container {
@@ -51,22 +52,41 @@ nav {
 }
 
 .logo {
-  font-family: "Orbitron", sans-serif;
-  color: #3bdcff;
-  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+}
+
+.logo-initials {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--cyan);
+  letter-spacing: 3px;
+}
+
+.logo-bar {
+  width: 28px;
+  height: 3px;
+  background: var(--gold);
+  box-shadow: 0 0 10px var(--gold);
 }
 
 .nav-links a {
   margin-left: 1.4rem;
   cursor: pointer;
   position: relative;
-  color: #9aa0b3;
+  color: var(--muted);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  font-family: var(--font-body);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .nav-links a:hover {
-  color: #fff;
+  color: var(--text);
 }
 
 /* LIGHTSABER UNDERLINE */
@@ -75,9 +95,9 @@ nav {
   left: 0;
   bottom: -6px;
   width: 0;
-  height: 3px;
-  background: #3bdcff;
-  box-shadow: 0 0 12px #3bdcff;
+  height: 2px;
+  background: var(--gold);
+  box-shadow: 0 0 10px var(--gold);
   transition: width 0.3s ease;
 }
 
