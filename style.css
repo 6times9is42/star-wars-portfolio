@@ -457,3 +457,66 @@ h2 {
   color: var(--muted);
   letter-spacing: 0.06em;
 }
+
+/* ===== CERTIFICATIONS ===== */
+.badge-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  justify-content: center;
+  max-width: 800px;
+  margin-top: 2rem;
+}
+
+.badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  cursor: default;
+}
+
+.badge[data-type="cs"]    { --badge-accent: var(--cyan);  --badge-rgb: 59,220,255; }
+.badge[data-type="quant"] { --badge-accent: var(--gold);  --badge-rgb: 212,169,68; }
+.badge[data-type="math"]  { --badge-accent: var(--green); --badge-rgb: 77,255,180; }
+
+.badge-circle {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 30%, var(--surface-2), var(--surface));
+  border: 2px solid var(--badge-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.badge:hover .badge-circle {
+  transform: scale(1.1);
+  box-shadow: 0 0 28px rgba(var(--badge-rgb), 0.4);
+}
+
+.badge-icon {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--badge-accent);
+  letter-spacing: 0.12em;
+}
+
+.badge-name {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text);
+  text-align: center;
+  max-width: 110px;
+  line-height: 1.3;
+}
+
+.badge-issuer {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  text-align: center;
+}
