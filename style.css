@@ -221,8 +221,12 @@ nav {
   transform: translateX(-50%);
   color: var(--muted);
   font-size: 0.9rem;
-  opacity: 0.5;
+  opacity: 0;
+  transition: opacity 1s ease 0.8s;
   animation: bounce 2.5s ease-in-out infinite;
+}
+.scroll-hint.visible {
+  opacity: 0.5;
 }
 @keyframes bounce {
   0%, 100% { transform: translateX(-50%) translateY(0); }

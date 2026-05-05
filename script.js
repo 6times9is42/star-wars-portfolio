@@ -11,6 +11,7 @@ function typeHero() {
     // typing done — reveal subtitle and CTAs
     document.getElementById('hero-sub').classList.add('visible');
     document.getElementById('hero-ctas').classList.add('visible');
+    document.querySelector('.scroll-hint').classList.add('visible');
   }
 }
 typeHero();
@@ -169,13 +170,6 @@ document.body.addEventListener("click", () => {
   }
 });
 
-const scroll = document.querySelector(".projects-scroll");
-
-scroll.addEventListener("scroll", () => {
-  if (scroll.scrollLeft + scroll.clientWidth >= scroll.scrollWidth - 5) {
-    scroll.scrollLeft = 0;
-  }
-});
 
 /* ========= FLIP CARDS (PROJECTS ONLY) ========= */
 document.addEventListener("DOMContentLoaded", () => {
