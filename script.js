@@ -215,6 +215,11 @@ document.querySelectorAll('.cta-btn').forEach(btn => {
   });
 });
 
+document.querySelector('.logo').addEventListener('click', e => {
+  e.stopPropagation();
+  jumpTo(0);
+});
+
 /* ========= PROJECT INFINITE SCROLL ========= */
 const scrollTrack = document.getElementById('scroll-track');
 let scrollPos = 0;
