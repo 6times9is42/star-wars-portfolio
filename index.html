@@ -62,136 +62,143 @@
 </section>
 
 <section id="projects" class="screen">
-  <h2 class="section-title">Projects</h2>
+  <h2 class="section-title">PROJECTS</h2>
 
   <div class="horizontal-scroll">
-    <div class="scroll-track">
-      <!-- CARD 1 -->
-      <div class="project-card">
-        <div class="card-corner top-left"></div>
-        <div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div>
-        <div class="card-corner bottom-right"></div>
+    <div class="scroll-track" id="scroll-track">
 
+      <!-- === CARD SET A (originals) === -->
+      <div class="project-card" data-category="math">
+        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
+        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
         <div class="card-content">
+          <span class="card-category">Math · Research</span>
           <h3>CatScan Project</h3>
-          <p>Mathematical modeling and scan-based analysis.</p>
-          <span class="card-tag">Math · Research</span>
+          <p>Mathematical modeling and scan-based analysis applied to computational problems.</p>
+          <div class="card-chips">
+            <span class="chip">Python</span><span class="chip">NumPy</span><span class="chip">Research</span>
+          </div>
         </div>
       </div>
 
-      <!-- CARD 2 -->
-      <div class="project-card">
-        <div class="card-corner top-left"></div>
-        <div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div>
-        <div class="card-corner bottom-right"></div>
-
+      <div class="project-card" data-category="algo">
+        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
+        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
         <div class="card-content">
+          <span class="card-category">Algorithms · CS</span>
           <h3>Traffic Network Analysis</h3>
-          <p>Graph theory, Braess’s paradox, congestion modeling.</p>
-          <span class="card-tag">Graphs · Algorithms</span>
+          <p>Exploring Braess’s paradox and congestion dynamics in urban graph networks.</p>
+          <div class="card-chips">
+            <span class="chip">Graph Theory</span><span class="chip">C++</span><span class="chip">Algorithms</span>
+          </div>
         </div>
       </div>
 
-      <!-- CARD 3 -->
-      <div class="project-card">
-        <div class="card-corner top-left"></div>
-        <div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div>
-        <div class="card-corner bottom-right"></div>
-
+      <div class="project-card" data-category="quant">
+        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
+        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
         <div class="card-content">
+          <span class="card-category">Finance · Quant</span>
           <h3>Quant Trading Models</h3>
-          <p>Backtesting strategies and risk metrics.</p>
-          <span class="card-tag">Finance · Quant</span>
+          <p>Backtesting systematic strategies with risk-adjusted return metrics and signal analysis.</p>
+          <div class="card-chips">
+            <span class="chip">Python</span><span class="chip">Pandas</span><span class="chip">Finance</span>
+          </div>
         </div>
       </div>
-      <!-- CARD 1 -->
-      <div class="project-card">
-        <div class="card-corner top-left"></div>
-        <div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div>
-        <div class="card-corner bottom-right"></div>
 
+      <div class="project-card" data-category="systems">
+        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
+        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
         <div class="card-content">
+          <span class="card-category">Systems · C++</span>
+          <h3>[Project Placeholder]</h3>
+          <p>Placeholder description for a systems-level project. Details coming soon.</p>
+          <div class="card-chips">
+            <span class="chip">C</span><span class="chip">C++</span><span class="chip">Systems</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card" data-category="algo">
+        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
+        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
+        <div class="card-content">
+          <span class="card-category">Algorithms · Theory</span>
+          <h3>[Project Placeholder]</h3>
+          <p>Placeholder for an algorithms or CS theory project. Details coming soon.</p>
+          <div class="card-chips">
+            <span class="chip">Algorithms</span><span class="chip">Math</span><span class="chip">Theory</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- === CARD SET B (duplicates for seamless loop) === -->
+      <div class="project-card" data-category="math">
+        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
+        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
+        <div class="card-content">
+          <span class="card-category">Math · Research</span>
           <h3>CatScan Project</h3>
-          <p>Mathematical modeling and scan-based analysis.</p>
-          <span class="card-tag">Math · Research</span>
+          <p>Mathematical modeling and scan-based analysis applied to computational problems.</p>
+          <div class="card-chips">
+            <span class="chip">Python</span><span class="chip">NumPy</span><span class="chip">Research</span>
+          </div>
         </div>
       </div>
 
-      <!-- CARD 2 -->
-      <div class="project-card">
-        <div class="card-corner top-left"></div>
-        <div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div>
-        <div class="card-corner bottom-right"></div>
-
+      <div class="project-card" data-category="algo">
+        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
+        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
         <div class="card-content">
+          <span class="card-category">Algorithms · CS</span>
           <h3>Traffic Network Analysis</h3>
-          <p>Graph theory, Braess’s paradox, congestion modeling.</p>
-          <span class="card-tag">Graphs · Algorithms</span>
+          <p>Exploring Braess’s paradox and congestion dynamics in urban graph networks.</p>
+          <div class="card-chips">
+            <span class="chip">Graph Theory</span><span class="chip">C++</span><span class="chip">Algorithms</span>
+          </div>
         </div>
       </div>
 
-      <!-- CARD 3 -->
-      <div class="project-card">
-        <div class="card-corner top-left"></div>
-        <div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div>
-        <div class="card-corner bottom-right"></div>
-
+      <div class="project-card" data-category="quant">
+        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
+        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
         <div class="card-content">
+          <span class="card-category">Finance · Quant</span>
           <h3>Quant Trading Models</h3>
-          <p>Backtesting strategies and risk metrics.</p>
-          <span class="card-tag">Finance · Quant</span>
+          <p>Backtesting systematic strategies with risk-adjusted return metrics and signal analysis.</p>
+          <div class="card-chips">
+            <span class="chip">Python</span><span class="chip">Pandas</span><span class="chip">Finance</span>
+          </div>
         </div>
       </div>
-      <!-- CARD 1 -->
-      <div class="project-card">
-        <div class="card-corner top-left"></div>
-        <div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div>
-        <div class="card-corner bottom-right"></div>
 
+      <div class="project-card" data-category="systems">
+        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
+        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
         <div class="card-content">
-          <h3>CatScan Project</h3>
-          <p>Mathematical modeling and scan-based analysis.</p>
-          <span class="card-tag">Math · Research</span>
+          <span class="card-category">Systems · C++</span>
+          <h3>[Project Placeholder]</h3>
+          <p>Placeholder description for a systems-level project. Details coming soon.</p>
+          <div class="card-chips">
+            <span class="chip">C</span><span class="chip">C++</span><span class="chip">Systems</span>
+          </div>
         </div>
       </div>
 
-      <!-- CARD 2 -->
-      <div class="project-card">
-        <div class="card-corner top-left"></div>
-        <div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div>
-        <div class="card-corner bottom-right"></div>
-
+      <div class="project-card" data-category="algo">
+        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
+        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
         <div class="card-content">
-          <h3>Traffic Network Analysis</h3>
-          <p>Graph theory, Braess’s paradox, congestion modeling.</p>
-          <span class="card-tag">Graphs · Algorithms</span>
+          <span class="card-category">Algorithms · Theory</span>
+          <h3>[Project Placeholder]</h3>
+          <p>Placeholder for an algorithms or CS theory project. Details coming soon.</p>
+          <div class="card-chips">
+            <span class="chip">Algorithms</span><span class="chip">Math</span><span class="chip">Theory</span>
+          </div>
         </div>
       </div>
 
-      <!-- CARD 3 -->
-      <div class="project-card">
-        <div class="card-corner top-left"></div>
-        <div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div>
-        <div class="card-corner bottom-right"></div>
-
-        <div class="card-content">
-          <h3>Quant Trading Models</h3>
-          <p>Backtesting strategies and risk metrics.</p>
-          <span class="card-tag">Finance · Quant</span>
-        </div>
-      </div>
-
-      <!-- DUPLICATE CARDS FOR LOOPING -->
-      <!-- (exact copies – important for infinite scroll) -->
     </div>
   </div>
 </section>
