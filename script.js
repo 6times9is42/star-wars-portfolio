@@ -7,6 +7,10 @@ function typeHero() {
   if (charIndex < heroText.length) {
     typed.textContent += heroText[charIndex++];
     setTimeout(typeHero, 90);
+  } else {
+    // typing done — reveal subtitle and CTAs
+    document.getElementById('hero-sub').classList.add('visible');
+    document.getElementById('hero-ctas').classList.add('visible');
   }
 }
 typeHero();
@@ -137,6 +141,15 @@ document.querySelectorAll(".nav-links a").forEach(link => {
   link.addEventListener("click", e => {
     e.stopPropagation();
     const target = link.dataset.target;
+    const index = screens.findIndex(s => s.id === target);
+    if (index !== -1) jumpTo(index);
+  });
+});
+
+document.querySelectorAll('.cta-btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const target = btn.dataset.target;
     const index = screens.findIndex(s => s.id === target);
     if (index !== -1) jumpTo(index);
   });
