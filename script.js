@@ -101,6 +101,55 @@ function animate() {
 
 animate();
 
+/* ========= TERMINAL (ABOUT) ========= */
+const termLines = [
+  { cls: 'blank' },
+  { cls: 'prompt', text: '$ whoami' },
+  { cls: 'out',    text: 'Yashvardhan Pattanashetti' },
+  { cls: 'dim',    text: 'Computer Science @ Nanyang Technological University' },
+  { cls: 'blank' },
+  { cls: 'prompt', text: '$ cat skills.txt' },
+  { cls: 'out',    text: '[SYSTEMS]   C · C++ · Operating Systems · Networks' },
+  { cls: 'out',    text: '[ALGO]      Graph Theory · Dynamic Programming · Math' },
+  { cls: 'out',    text: '[QUANT]     Python · Backtesting · Financial Modeling' },
+  { cls: 'blank' },
+  { cls: 'prompt', text: '$ cat interests.txt' },
+  { cls: 'out',    text: 'Competitive Programming' },
+  { cls: 'out',    text: 'Quantitative Finance' },
+  { cls: 'out',    text: 'Low-Level Systems Design' },
+  { cls: 'blank' },
+  { cls: 'prompt', text: '$ _' },
+];
+
+let terminalRan = false;
+
+function runTerminal() {
+  const output = document.getElementById('terminal-output');
+  let i = 0;
+
+  function next() {
+    if (i >= termLines.length) return;
+    const line = termLines[i++];
+    const el = document.createElement('div');
+    el.className = 't-line';
+
+    if (line.cls === 'blank') {
+      el.innerHTML = '<span class="t-blank"></span>';
+    } else if (line.cls === 'prompt') {
+      el.innerHTML = `<span class="t-prompt">${line.text}</span>`;
+    } else {
+      el.innerHTML = `<span class="t-${line.cls}">${line.text}</span>`;
+    }
+
+    output.appendChild(el);
+
+    const delay = line.cls === 'prompt' ? 550 : line.cls === 'blank' ? 80 : 180;
+    setTimeout(next, delay);
+  }
+
+  next();
+}
+
 /* ========= HYPERSPACE JUMP ========= */
 function jumpTo(index) {
   if (jumping || index === currentScreen) return;
@@ -120,6 +169,10 @@ function jumpTo(index) {
   setTimeout(() => {
     screens[index].classList.add("active");
     currentScreen = index;
+    if (screens[index].id === 'about' && !terminalRan) {
+      terminalRan = true;
+      setTimeout(runTerminal, 300);
+    }
   }, 2000);
 
   // Exit hyperspace
