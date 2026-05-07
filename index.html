@@ -1,273 +1,669 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Yashvardhan | Portfolio</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@300;400;500;600&family=Space+Mono&family=Libre+Franklin:wght@300;400&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=19" />
 </head>
 
 <body>
 
-<canvas id="hyperspace"></canvas>
-
-<nav>
-  <div class="nav-container">
-    <div class="logo">
-      <span class="logo-initials">YP</span>
-      <span class="logo-bar"></span>
-    </div>
-    <div class="nav-links">
-      <a data-target="hero">Home<span class="saber"></span></a>
-      <a data-target="about">About<span class="saber"></span></a>
-      <a data-target="projects">Projects<span class="saber"></span></a>
-      <a data-target="certifications">Certifications<span class="saber"></span></a>
-      <a data-target="blog">Blog<span class="saber"></span></a>
+  <div id="sw-intro">
+    <div class="sw-content">
+      <p id="sw-line1"></p>
+      <p id="sw-line2"></p>
     </div>
   </div>
-</nav>
 
-<!-- HERO -->
-<section id="hero" class="screen active hero">
+  <canvas id="hyperspace"></canvas>
+
   <div class="hero-coord top-left-coord">0°N · 0°E · ALT 0</div>
-  <div class="hero-coord top-right-coord">SYS: ONLINE</div>
-  <div class="hero-coord bottom-left-coord">SIGNAL: CLEAR</div>
+  <div class="hero-coord top-right-coord" id="sys-status">SYS: ONLINE</div>
 
-  <h1><span id="typed-text"></span></h1>
-  <p id="hero-sub" class="hero-sub">Computer Science @ NTU &nbsp;·&nbsp; Systems &nbsp;·&nbsp; Algorithms &nbsp;·&nbsp; Quant Finance</p>
+  <!-- HERO -->
+  <section id="hero" class="screen hero">
+    <div class="holo-wrap">
+      <div class="holo-sweep"></div>
+      <div class="holo-tx-label">
+        <span class="holo-blink-bar"></span>
+        INCOMING TRANSMISSION · ORIGIN: CORUSCANT SECTOR
+      </div>
+      <h1><span id="typed-text"></span></h1>
+      <div class="holo-ring-group">
+        <div class="holo-ring"></div>
+        <div class="holo-ring holo-ring-b"></div>
+        <div class="holo-ring holo-ring-c"></div>
+      </div>
+    </div>
+    <div class="hero-nav-hint">
+      <span class="hero-nav-key">←</span>
+      <span class="hero-nav-label">USE ARROW KEYS TO NAVIGATE</span>
+      <span class="hero-nav-key">→</span>
+    </div>
+  </section>
 
-  <div class="hero-ctas" id="hero-ctas">
-    <button class="cta-btn" data-target="projects">[ VIEW PROJECTS ]</button>
-    <button class="cta-btn cta-secondary" data-target="certifications">[ CERTIFICATIONS ]</button>
+  <!-- ABOUT -->
+  <section id="about" class="screen">
+    <div class="about-layout">
+      <div class="about-photo">
+        <div class="photo-frame">
+          <img class="photo-img" src="images/profilepic.jpeg" alt="Yashvardhan" />
+          <div class="photo-scan"></div>
+        </div>
+        <div class="photo-meta">
+          <div class="photo-meta-row"><span class="about-key">NAME</span><span class="about-val">Yashvardhan P.</span>
+          </div>
+          <div class="photo-meta-row"><span class="about-key">STATUS</span><span class="about-val">ACTIVE</span></div>
+          <div class="photo-meta-row"><span class="about-key">UNIT</span><span class="about-val">NTU · CS</span></div>
+        </div>
+      </div>
+      <div class="terminal">
+        <div class="terminal-header">
+          <span class="terminal-dot tdot-red"></span>
+          <span class="terminal-dot tdot-yellow"></span>
+          <span class="terminal-dot tdot-green"></span>
+          <span class="terminal-title">bash — yash@ntu: ~</span>
+        </div>
+        <div class="terminal-body">
+          <div id="terminal-output"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" class="screen">
+    <h2 class="section-title">CHARTED SYSTEMS</h2>
+    <div class="starmap-layout">
+
+      <div class="starmap-container">
+        <div class="map-coord map-coord-tl">SEC: CORE-ALPHA · 26°N · 143°E</div>
+        <div class="map-coord map-coord-tr">CHART: PERSONAL LOG #YP-01</div>
+        <div class="map-coord map-coord-bl">SCALE: 1:4,000,000 PARSEC</div>
+        <div class="map-coord map-coord-br">UPDATED: STARDATE 2025.08</div>
+
+        <svg class="starmap-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs>
+            <filter id="glow-line" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="0.8" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          <line class="sml-a" x1="20" y1="29" x2="50" y2="68" stroke-width="0.4"
+            stroke-dasharray="2.5 3.5" filter="url(#glow-line)" />
+          <line class="sml-b" x1="50" y1="68" x2="80" y2="21" stroke-width="0.4"
+            stroke-dasharray="2.5 3.5" filter="url(#glow-line)" />
+        </svg>
+
+        <div class="planet-node active" data-idx="0" style="left:20%;top:29%;--pcolor:#3bdcff;--prgb:59,220,255">
+          <div class="planet-pulse" style="animation-delay:0s"></div>
+          <div class="planet-core"></div>
+          <div class="planet-label-wrap">
+            <div class="planet-name">MAHINDRA NEXUS</div>
+            <div class="planet-class">CLASS-R RESEARCH</div>
+          </div>
+        </div>
+
+        <div class="planet-node" data-idx="1" style="left:50%;top:68%;--pcolor:#d4a944;--prgb:212,169,68">
+          <div class="planet-pulse" style="animation-delay:1s"></div>
+          <div class="planet-core"></div>
+          <div class="planet-label-wrap label-above">
+            <div class="planet-name">CORUSCANT ACADEMY</div>
+            <div class="planet-class">CLASS-L LEADERSHIP</div>
+          </div>
+        </div>
+
+        <div class="planet-node" data-idx="2" style="left:80%;top:21%;--pcolor:#4dffb4;--prgb:77,255,180">
+          <div class="planet-pulse" style="animation-delay:2s"></div>
+          <div class="planet-core"></div>
+          <div class="planet-label-wrap">
+            <div class="planet-name">BESPIN HAVEN</div>
+            <div class="planet-class">CLASS-L LEADERSHIP</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="starmap-detail" id="starmap-detail"></div>
+
+    </div>
+  </section>
+
+  <section id="projects" class="screen">
+    <h2 class="section-title">PROJECTS</h2>
+
+    <div class="horizontal-scroll">
+      <div class="scroll-track" id="scroll-track">
+
+        <!-- === CARD SET A (originals) === -->
+        <div class="project-card" data-category="ml" data-project="fifa">
+          <div class="card-corner top-left"></div>
+          <div class="card-corner top-right"></div>
+          <div class="card-corner bottom-left"></div>
+          <div class="card-corner bottom-right"></div>
+          <div class="card-content">
+            <span class="card-category">ML · Data Science</span>
+            <h3>FIFA 2026 World Cup Predictor</h3>
+            <p>100,000-run Monte Carlo bracket simulator across all 48 nations, powered by XGBoost and squad data
+              scraped from Transfermarkt.</p>
+            <div class="card-chips">
+              <span class="chip">Python</span><span class="chip">XGBoost</span><span class="chip">SHAP</span><span
+                class="chip">Monte Carlo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-category="ml" data-project="catscan">
+          <div class="card-corner top-left"></div>
+          <div class="card-corner top-right"></div>
+          <div class="card-corner bottom-left"></div>
+          <div class="card-corner bottom-right"></div>
+          <div class="card-content">
+            <span class="card-category">ML · Mobile</span>
+            <h3>CatScan</h3>
+            <p>Offline Android app for early cataract screening in rural India. 93% validation accuracy with sub-1s
+              on-device CNN inference.</p>
+            <div class="card-chips">
+              <span class="chip">PyTorch</span><span class="chip">SQL</span><span class="chip">CNN</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-category="math" data-project="padic">
+          <div class="card-corner top-left"></div>
+          <div class="card-corner top-right"></div>
+          <div class="card-corner bottom-left"></div>
+          <div class="card-corner bottom-right"></div>
+          <div class="card-content">
+            <span class="card-category">Math · Research</span>
+            <h3>p-Adic Calculus</h3>
+            <p>First-principles framework for differentiation on p-adic numbers. Proved p-adic analogues of 5 core
+              calculus rules.</p>
+            <div class="card-chips">
+              <span class="chip">Calculus</span><span class="chip">Number Theory</span><span
+                class="chip">Research</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-category="systems" data-project="systems">
+          <div class="card-corner top-left"></div>
+          <div class="card-corner top-right"></div>
+          <div class="card-corner bottom-left"></div>
+          <div class="card-corner bottom-right"></div>
+          <div class="card-content">
+            <span class="card-category">Systems · C++</span>
+            <h3>[Project Placeholder]</h3>
+            <p>Placeholder description for a systems-level project. Details coming soon.</p>
+            <div class="card-chips">
+              <span class="chip">C</span><span class="chip">C++</span><span class="chip">Systems</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-category="algo" data-project="algo">
+          <div class="card-corner top-left"></div>
+          <div class="card-corner top-right"></div>
+          <div class="card-corner bottom-left"></div>
+          <div class="card-corner bottom-right"></div>
+          <div class="card-content">
+            <span class="card-category">Algorithms · Theory</span>
+            <h3>[Project Placeholder]</h3>
+            <p>Placeholder for an algorithms or CS theory project. Details coming soon.</p>
+            <div class="card-chips">
+              <span class="chip">Algorithms</span><span class="chip">Math</span><span class="chip">Theory</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- === CARD SET B (duplicates for seamless loop) === -->
+        <div class="project-card" data-category="ml" data-project="fifa">
+          <div class="card-corner top-left"></div>
+          <div class="card-corner top-right"></div>
+          <div class="card-corner bottom-left"></div>
+          <div class="card-corner bottom-right"></div>
+          <div class="card-content">
+            <span class="card-category">ML · Data Science</span>
+            <h3>FIFA 2026 World Cup Predictor</h3>
+            <p>100,000-run Monte Carlo bracket simulator across all 48 nations, powered by XGBoost and squad data
+              scraped from Transfermarkt.</p>
+            <div class="card-chips">
+              <span class="chip">Python</span><span class="chip">XGBoost</span><span class="chip">SHAP</span><span
+                class="chip">Monte Carlo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-category="ml" data-project="catscan">
+          <div class="card-corner top-left"></div>
+          <div class="card-corner top-right"></div>
+          <div class="card-corner bottom-left"></div>
+          <div class="card-corner bottom-right"></div>
+          <div class="card-content">
+            <span class="card-category">ML · Mobile</span>
+            <h3>CatScan</h3>
+            <p>Offline Android app for early cataract screening in rural India. 93% validation accuracy with sub-1s
+              on-device CNN inference.</p>
+            <div class="card-chips">
+              <span class="chip">PyTorch</span><span class="chip">SQL</span><span class="chip">CNN</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-category="math" data-project="padic">
+          <div class="card-corner top-left"></div>
+          <div class="card-corner top-right"></div>
+          <div class="card-corner bottom-left"></div>
+          <div class="card-corner bottom-right"></div>
+          <div class="card-content">
+            <span class="card-category">Math · Research</span>
+            <h3>p-Adic Calculus</h3>
+            <p>First-principles framework for differentiation on p-adic numbers. Proved p-adic analogues of 5 core
+              calculus rules.</p>
+            <div class="card-chips">
+              <span class="chip">Calculus</span><span class="chip">Number Theory</span><span
+                class="chip">Research</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-category="systems" data-project="systems">
+          <div class="card-corner top-left"></div>
+          <div class="card-corner top-right"></div>
+          <div class="card-corner bottom-left"></div>
+          <div class="card-corner bottom-right"></div>
+          <div class="card-content">
+            <span class="card-category">Systems · C++</span>
+            <h3>[Project Placeholder]</h3>
+            <p>Placeholder description for a systems-level project. Details coming soon.</p>
+            <div class="card-chips">
+              <span class="chip">C</span><span class="chip">C++</span><span class="chip">Systems</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-category="algo" data-project="algo">
+          <div class="card-corner top-left"></div>
+          <div class="card-corner top-right"></div>
+          <div class="card-corner bottom-left"></div>
+          <div class="card-corner bottom-right"></div>
+          <div class="card-content">
+            <span class="card-category">Algorithms · Theory</span>
+            <h3>[Project Placeholder]</h3>
+            <p>Placeholder for an algorithms or CS theory project. Details coming soon.</p>
+            <div class="card-chips">
+              <span class="chip">Algorithms</span><span class="chip">Math</span><span class="chip">Theory</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section id="certifications" class="screen">
+    <h2>CERTIFICATIONS</h2>
+    <div class="cert-grid">
+
+      <div class="cert-card" data-type="cs">
+        <div class="cert-inner">
+          <div class="cert-face cert-face-front">
+            <div class="cert-img-frame">
+              <img class="cert-img" src="images/google-logo.webp" alt="Google" />
+              <div class="cert-img-label">CERTIFICATE</div>
+            </div>
+            <div class="cert-org">Google</div>
+            <div class="cert-cred">Google AI</div>
+            <div class="cert-bottom-row">
+              <span class="cert-date">Apr 2026</span>
+              <span class="cert-verified">✓ VERIFIED</span>
+            </div>
+          </div>
+          <div class="cert-face cert-face-back">
+            <div class="cert-img-frame">
+              <img class="cert-img" src="images/certs/Coursera_CJBVNUGLIFO5-1.jpg"
+                alt="Google AI Professional Certificate" />
+              <div class="cert-img-label">CERTIFICATE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cert-card" data-type="quant">
+        <div class="cert-inner">
+          <div class="cert-face cert-face-front">
+            <div class="cert-img-frame">
+              <img class="cert-img" src="images/google-logo.webp" alt="Google" />
+              <div class="cert-img-label">CERTIFICATE</div>
+            </div>
+            <div class="cert-org">Google</div>
+            <div class="cert-cred">AI Fundamentals</div>
+            <div class="cert-bottom-row">
+              <span class="cert-date">Apr 2026</span>
+              <span class="cert-verified">✓ VERIFIED</span>
+            </div>
+          </div>
+          <div class="cert-face cert-face-back">
+            <div class="cert-img-frame">
+              <img class="cert-img" src="images/certs/Coursera_L9MDGVVBZT8I-1.jpg" alt="AI Fundamentals Certificate" />
+              <div class="cert-img-label">CERTIFICATE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cert-card" data-type="math">
+        <div class="cert-inner">
+          <div class="cert-face cert-face-front">
+            <div class="cert-img-frame">
+              <img class="cert-img" src="images/google-logo.webp" alt="Google" />
+              <div class="cert-img-label">CERTIFICATE</div>
+            </div>
+            <div class="cert-org">Google</div>
+            <div class="cert-cred">AI Brainstorming</div>
+            <div class="cert-bottom-row">
+              <span class="cert-date">Apr 2026</span>
+              <span class="cert-verified">✓ VERIFIED</span>
+            </div>
+          </div>
+          <div class="cert-face cert-face-back">
+            <div class="cert-img-frame">
+              <img class="cert-img" src="images/certs/Coursera_O9EW40C21A3Z-1.jpg"
+                alt="AI for Brainstorming and Planning Certificate" />
+              <div class="cert-img-label">CERTIFICATE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cert-card" data-type="cs">
+        <div class="cert-inner">
+          <div class="cert-face cert-face-front">
+            <div class="cert-img-frame">
+              <img class="cert-img" src="images/google-logo.webp" alt="Google" />
+              <div class="cert-img-label">CERTIFICATE</div>
+            </div>
+            <div class="cert-org">Google</div>
+            <div class="cert-cred">AI Research</div>
+            <div class="cert-bottom-row">
+              <span class="cert-date">Apr 2026</span>
+              <span class="cert-verified">✓ VERIFIED</span>
+            </div>
+          </div>
+          <div class="cert-face cert-face-back">
+            <div class="cert-img-frame">
+              <img class="cert-img" src="images/certs/Coursera_0EV0Z437EH6Y-1.jpg"
+                alt="AI for Research and Insights Certificate" />
+              <div class="cert-img-label">CERTIFICATE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cert-card" data-type="quant">
+        <div class="cert-inner">
+          <div class="cert-face cert-face-front">
+            <div class="cert-img-frame">
+              <img class="cert-img" src="images/google-logo.webp" alt="Google" />
+              <div class="cert-img-label">CERTIFICATE</div>
+            </div>
+            <div class="cert-org">Google</div>
+            <div class="cert-cred">AI Writing & Comms</div>
+            <div class="cert-bottom-row">
+              <span class="cert-date">Apr 2026</span>
+              <span class="cert-verified">✓ VERIFIED</span>
+            </div>
+          </div>
+          <div class="cert-face cert-face-back">
+            <div class="cert-img-frame">
+              <img class="cert-img" src="images/certs/Coursera_CU0XOVTOJNMM-1.jpg"
+                alt="AI for Writing and Communicating Certificate" />
+              <div class="cert-img-label">CERTIFICATE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cert-card" data-type="math">
+        <div class="cert-inner">
+          <div class="cert-face cert-face-front">
+            <div class="cert-img-frame">
+              <img class="cert-img" src="images/google-logo.webp" alt="Google" />
+              <div class="cert-img-label">CERTIFICATE</div>
+            </div>
+            <div class="cert-org">Google</div>
+            <div class="cert-cred">AI Content Creation</div>
+            <div class="cert-bottom-row">
+              <span class="cert-date">Apr 2026</span>
+              <span class="cert-verified">✓ VERIFIED</span>
+            </div>
+          </div>
+          <div class="cert-face cert-face-back">
+            <div class="cert-img-frame">
+              <img class="cert-img" src="images/certs/Coursera_IS9T1NJJLRS8-1.jpg"
+                alt="AI for Content Creation Certificate" />
+              <div class="cert-img-label">CERTIFICATE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cert-card" data-type="cs">
+        <div class="cert-inner">
+          <div class="cert-face cert-face-front">
+            <div class="cert-img-frame">
+              <img class="cert-img" src="images/google-logo.webp" alt="Google" />
+              <div class="cert-img-label">CERTIFICATE</div>
+            </div>
+            <div class="cert-org">Google</div>
+            <div class="cert-cred">AI Data Analysis</div>
+            <div class="cert-bottom-row">
+              <span class="cert-date">Apr 2026</span>
+              <span class="cert-verified">✓ VERIFIED</span>
+            </div>
+          </div>
+          <div class="cert-face cert-face-back">
+            <div class="cert-img-frame">
+              <img class="cert-img" src="images/certs/Coursera_6PTM2UBA3BDE-1.jpg"
+                alt="AI for Data Analysis Certificate" />
+              <div class="cert-img-label">CERTIFICATE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cert-card" data-type="quant">
+        <div class="cert-inner">
+          <div class="cert-face cert-face-front">
+            <div class="cert-img-frame">
+              <img class="cert-img" src="images/google-logo.webp" alt="Google" />
+              <div class="cert-img-label">CERTIFICATE</div>
+            </div>
+            <div class="cert-org">Google</div>
+            <div class="cert-cred">AI App Building</div>
+            <div class="cert-bottom-row">
+              <span class="cert-date">Apr 2026</span>
+              <span class="cert-verified">✓ VERIFIED</span>
+            </div>
+          </div>
+          <div class="cert-face cert-face-back">
+            <div class="cert-img-frame">
+              <img class="cert-img" src="images/certs/Coursera_3YPL4WTJLC8N-1.jpg"
+                alt="AI for App Building Certificate" />
+              <div class="cert-img-label">CERTIFICATE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BLOG -->
+  <section id="blog" class="screen">
+    <h2>TRANSMISSIONS</h2>
+    <div class="transmissions">
+
+      <div class="transmission-card">
+        <div class="tx-header">
+          <span class="tx-id">[TRANSMISSION #001]</span>
+          <span class="tx-date">STARDATE 2026.05.07</span>
+        </div>
+        <h3 class="tx-title">I Built an ML System to Predict the FIFA 2026 World Cup Winner</h3>
+        <p class="tx-excerpt">
+          With the World Cup 54 days away and finals done, I built a 100,000-simulation Monte Carlo predictor using
+          XGBoost, squad data from Transfermarkt, and SHAP explainability. France is most likely to win. I'm still
+          rooting for Portugal.
+        </p>
+        <div class="tx-footer">
+          <span class="tx-status"><span class="tx-dot"></span>STATUS: LIVE</span>
+          <span class="tx-read" data-tx="001">READ LOG →</span>
+        </div>
+      </div>
+
+      <div class="tx-incoming">
+        <span>[ SIGNAL INCOMING — MORE TRANSMISSIONS PENDING ]</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PROJECT MODAL -->
+  <div id="project-modal">
+    <div class="pm-inner">
+      <div class="pm-c tl"></div>
+      <div class="pm-c tr"></div>
+      <div class="pm-c bl"></div>
+      <div class="pm-c br"></div>
+      <div class="pm-header">
+        <span class="pm-file-id"></span>
+        <span class="pm-status-tag"></span>
+        <button class="pm-close">[×]</button>
+      </div>
+      <div class="pm-body">
+        <div class="pm-visual">
+          <div class="pm-scan-line"></div>
+          <div class="pm-glyph"></div>
+          <span class="pm-vis-label">MISSION FILE</span>
+        </div>
+        <div class="pm-details">
+          <div><span class="pm-domain-tag"></span></div>
+          <h2 class="pm-title"></h2>
+          <div class="pm-section">
+            <div class="pm-label">TECH STACK</div>
+            <div class="pm-chips"></div>
+          </div>
+          <div class="pm-section">
+            <div class="pm-label">SKILL SET</div>
+            <div class="pm-skills"></div>
+          </div>
+          <div class="pm-section">
+            <div class="pm-label">MISSION BRIEF</div>
+            <p class="pm-brief"></p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="scroll-hint">&#9660;</div>
-</section>
-
-<!-- ABOUT -->
-<section id="about" class="screen">
-  <div class="terminal">
-    <div class="terminal-header">
-      <span class="terminal-dot tdot-red"></span>
-      <span class="terminal-dot tdot-yellow"></span>
-      <span class="terminal-dot tdot-green"></span>
-      <span class="terminal-title">bash — yash@ntu: ~</span>
-    </div>
-    <div class="terminal-body">
-      <div id="terminal-output"></div>
+  <!-- TRANSMISSION MODAL -->
+  <div id="tx-modal">
+    <div class="txm-inner">
+      <div class="txm-header">
+        <span class="txm-id-tag"></span>
+        <span class="txm-date-tag"></span>
+        <button class="txm-close">[×]</button>
+      </div>
+      <div class="txm-scroll">
+        <h3 class="txm-main-title"></h3>
+        <div class="txm-content"></div>
+      </div>
+      <div class="txm-footer">
+        <span class="txm-sig"><span class="txm-dot"></span>SIGNAL AUTHENTICATED</span>
+        <span class="txm-eof">[ END TRANSMISSION ]</span>
+      </div>
     </div>
   </div>
-</section>
 
-<section id="projects" class="screen">
-  <h2 class="section-title">PROJECTS</h2>
-
-  <div class="horizontal-scroll">
-    <div class="scroll-track" id="scroll-track">
-
-      <!-- === CARD SET A (originals) === -->
-      <div class="project-card" data-category="math">
-        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
-        <div class="card-content">
-          <span class="card-category">Math · Research</span>
-          <h3>CatScan Project</h3>
-          <p>Mathematical modeling and scan-based analysis applied to computational problems.</p>
-          <div class="card-chips">
-            <span class="chip">Python</span><span class="chip">NumPy</span><span class="chip">Research</span>
-          </div>
-        </div>
+  <!-- CERT LIGHTBOX -->
+  <div id="cert-modal">
+    <div class="certm-inner">
+      <div class="certm-header">
+        <span class="certm-label">CERTIFICATE RECORD</span>
+        <button class="certm-close">[×]</button>
       </div>
-
-      <div class="project-card" data-category="algo">
-        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
-        <div class="card-content">
-          <span class="card-category">Algorithms · CS</span>
-          <h3>Traffic Network Analysis</h3>
-          <p>Exploring Braess’s paradox and congestion dynamics in urban graph networks.</p>
-          <div class="card-chips">
-            <span class="chip">Graph Theory</span><span class="chip">C++</span><span class="chip">Algorithms</span>
-          </div>
-        </div>
+      <div class="certm-body">
+        <img id="certm-img" src="" alt="Certificate" />
       </div>
-
-      <div class="project-card" data-category="quant">
-        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
-        <div class="card-content">
-          <span class="card-category">Finance · Quant</span>
-          <h3>Quant Trading Models</h3>
-          <p>Backtesting systematic strategies with risk-adjusted return metrics and signal analysis.</p>
-          <div class="card-chips">
-            <span class="chip">Python</span><span class="chip">Pandas</span><span class="chip">Finance</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-card" data-category="systems">
-        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
-        <div class="card-content">
-          <span class="card-category">Systems · C++</span>
-          <h3>[Project Placeholder]</h3>
-          <p>Placeholder description for a systems-level project. Details coming soon.</p>
-          <div class="card-chips">
-            <span class="chip">C</span><span class="chip">C++</span><span class="chip">Systems</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-card" data-category="algo">
-        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
-        <div class="card-content">
-          <span class="card-category">Algorithms · Theory</span>
-          <h3>[Project Placeholder]</h3>
-          <p>Placeholder for an algorithms or CS theory project. Details coming soon.</p>
-          <div class="card-chips">
-            <span class="chip">Algorithms</span><span class="chip">Math</span><span class="chip">Theory</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- === CARD SET B (duplicates for seamless loop) === -->
-      <div class="project-card" data-category="math">
-        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
-        <div class="card-content">
-          <span class="card-category">Math · Research</span>
-          <h3>CatScan Project</h3>
-          <p>Mathematical modeling and scan-based analysis applied to computational problems.</p>
-          <div class="card-chips">
-            <span class="chip">Python</span><span class="chip">NumPy</span><span class="chip">Research</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-card" data-category="algo">
-        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
-        <div class="card-content">
-          <span class="card-category">Algorithms · CS</span>
-          <h3>Traffic Network Analysis</h3>
-          <p>Exploring Braess’s paradox and congestion dynamics in urban graph networks.</p>
-          <div class="card-chips">
-            <span class="chip">Graph Theory</span><span class="chip">C++</span><span class="chip">Algorithms</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-card" data-category="quant">
-        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
-        <div class="card-content">
-          <span class="card-category">Finance · Quant</span>
-          <h3>Quant Trading Models</h3>
-          <p>Backtesting systematic strategies with risk-adjusted return metrics and signal analysis.</p>
-          <div class="card-chips">
-            <span class="chip">Python</span><span class="chip">Pandas</span><span class="chip">Finance</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-card" data-category="systems">
-        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
-        <div class="card-content">
-          <span class="card-category">Systems · C++</span>
-          <h3>[Project Placeholder]</h3>
-          <p>Placeholder description for a systems-level project. Details coming soon.</p>
-          <div class="card-chips">
-            <span class="chip">C</span><span class="chip">C++</span><span class="chip">Systems</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-card" data-category="algo">
-        <div class="card-corner top-left"></div><div class="card-corner top-right"></div>
-        <div class="card-corner bottom-left"></div><div class="card-corner bottom-right"></div>
-        <div class="card-content">
-          <span class="card-category">Algorithms · Theory</span>
-          <h3>[Project Placeholder]</h3>
-          <p>Placeholder for an algorithms or CS theory project. Details coming soon.</p>
-          <div class="card-chips">
-            <span class="chip">Algorithms</span><span class="chip">Math</span><span class="chip">Theory</span>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
-</section>
 
-<!-- CERTIFICATIONS -->
-<section id="certifications" class="screen">
-  <h2>CERTIFICATIONS</h2>
-  <div class="badge-grid">
-
-    <div class="badge" data-type="cs">
-      <div class="badge-circle"><span class="badge-icon">AWS</span></div>
-      <div class="badge-name">Cloud Practitioner</div>
-      <div class="badge-issuer">Amazon Web Services</div>
+  <!-- BRIDGE CONSOLE -->
+  <nav class="nav-console" id="nav-console">
+    <div class="console-bolt console-bolt-tl"></div>
+    <div class="console-bolt console-bolt-tr"></div>
+    <div class="console-bolt console-bolt-bl"></div>
+    <div class="console-bolt console-bolt-br"></div>
+    <div class="console-topstrip">
+      <span class="console-sys-id">NAVIGATION COMPUTER · BRIDGE CONTROL · SYS v2.1</span>
+      <span class="console-autopilot-tag"><span class="autopilot-pip"></span>AUTOPILOT ENGAGED</span>
     </div>
-
-    <div class="badge" data-type="cs">
-      <div class="badge-circle"><span class="badge-icon">PY</span></div>
-      <div class="badge-name">Python Essentials</div>
-      <div class="badge-issuer">Cisco NetAcad</div>
-    </div>
-
-    <div class="badge" data-type="quant">
-      <div class="badge-circle"><span class="badge-icon">FIN</span></div>
-      <div class="badge-name">[Placeholder Cert]</div>
-      <div class="badge-issuer">Issuer Name</div>
-    </div>
-
-    <div class="badge" data-type="math">
-      <div class="badge-circle"><span class="badge-icon">MTH</span></div>
-      <div class="badge-name">[Placeholder Cert]</div>
-      <div class="badge-issuer">Issuer Name</div>
-    </div>
-
-    <div class="badge" data-type="cs">
-      <div class="badge-circle"><span class="badge-icon">SYS</span></div>
-      <div class="badge-name">[Placeholder Cert]</div>
-      <div class="badge-issuer">Issuer Name</div>
-    </div>
-
-  </div>
-</section>
-
-<!-- BLOG -->
-<section id="blog" class="screen">
-  <h2>TRANSMISSIONS</h2>
-  <div class="transmissions">
-
-    <div class="transmission-card">
-      <div class="tx-header">
-        <span class="tx-id">[TRANSMISSION #001]</span>
-        <span class="tx-date">STARDATE 2026.05.05</span>
+    <div class="console-main-row">
+      <div class="console-telem console-telem-left">
+        <span class="ct-label">HEADING</span>
+        <span class="ct-val" id="ct-heading">000°</span>
+        <span class="ct-label">SPEED</span>
+        <span class="ct-val ct-val-cyan" id="ct-speed">SUB-LIGHT</span>
       </div>
-      <h3 class="tx-title">Placeholder Post — Title Coming Soon</h3>
-      <p class="tx-excerpt">
-        This is a placeholder entry for an upcoming technical post. Topics will span systems programming, algorithm deep-dives, and quantitative models.
-      </p>
-      <div class="tx-footer">
-        <span class="tx-status"><span class="tx-dot"></span>STATUS: PENDING</span>
-        <span class="tx-read">READ LOG →</span>
+      <div class="console-track-wrap">
+        <div class="console-track" id="console-track">
+          <div class="console-track-line"></div>
+          <div class="console-ship" id="console-ship">▲</div>
+          <div class="console-wp active" data-idx="0">
+            <div class="wp-pip"></div>
+            <span class="wp-label">HOME</span>
+          </div>
+          <div class="console-wp" data-idx="1">
+            <div class="wp-pip"></div>
+            <span class="wp-label">ABOUT</span>
+          </div>
+          <div class="console-wp" data-idx="2">
+            <div class="wp-pip"></div>
+            <span class="wp-label">EXP</span>
+          </div>
+          <div class="console-wp" data-idx="3">
+            <div class="wp-pip"></div>
+            <span class="wp-label">PROJ</span>
+          </div>
+          <div class="console-wp" data-idx="4">
+            <div class="wp-pip"></div>
+            <span class="wp-label">CERTS</span>
+          </div>
+          <div class="console-wp" data-idx="5">
+            <div class="wp-pip"></div>
+            <span class="wp-label">BLOG</span>
+          </div>
+        </div>
+      </div>
+      <div class="console-telem console-telem-right">
+        <span class="ct-label">SECTOR</span>
+        <span class="ct-val ct-val-gold" id="ct-sector">ALPHA-01</span>
+        <span class="ct-label">STATUS</span>
+        <span class="ct-val" id="ct-status">NOMINAL</span>
       </div>
     </div>
+  </nav>
 
-    <div class="tx-incoming">
-      <span>[ SIGNAL INCOMING — MORE TRANSMISSIONS PENDING ]</span>
-    </div>
-
-  </div>
-</section>
-
-<script src="script.js"></script>
+  <script src="script.js?v=19"></script>
 </body>
+
 </html>
