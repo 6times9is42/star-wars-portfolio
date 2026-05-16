@@ -366,8 +366,24 @@ const projectData = {
     skills: ['Calculus', 'Number Theory', 'Mathematical Writing', 'Research'],
     brief: 'Led development of a first-principles framework for differentiation on p-adic numbers, formally defining limits, continuity, and derivatives via p-adic ultrametric. Collaborated with team to prove p-adic analogues of 5 core calculus rules — product rule, chain rule, mean value theorem, L\'Hôpital\'s rule, and Taylor expansion — and analysed real-valued representations through the canonical map, exposing fundamental behavioural distinctions from classical real analysis.'
   },
-  systems: {
+  gigflow: {
     fileId: 'FILE-004',
+    title: 'GigFlow',
+    domain: 'Full-Stack · Dashboard',
+    rgb: '59,220,255',
+    accent: '#3bdcff',
+    glyph: 'GF',
+    status: 'LIVE',
+    techstack: ['React 19', 'TypeScript', 'Vite', 'TailwindCSS', 'Node.js', 'Express', 'MongoDB', 'Docker'],
+    skills: ['Full-Stack Engineering', 'JWT Authentication', 'Role-Based Access Control', 'Server-Side Filtering', 'Responsive Dashboard UX'],
+    brief: 'Built a production-grade MERN lead management dashboard with strict TypeScript across the client and API. GigFlow supports JWT authentication with admin and sales roles, per-lead ownership enforcement, lead CRUD, debounced search, server-side filtering by status/source, sorting, pagination, URL-synced filter state, and CSV export. The interface includes dark/light mode persistence, mobile layouts, loading and empty states, toast feedback, keyboard shortcuts, and Docker Compose for one-command local development.',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/6times9is42/gigflow' },
+      { label: 'Live Demo', href: 'https://gigflow-smoky.vercel.app' }
+    ]
+  },
+  systems: {
+    fileId: 'FILE-005',
     title: 'Systems Project',
     domain: 'Systems · C++',
     rgb: '212,169,68',
@@ -379,7 +395,7 @@ const projectData = {
     brief: 'Low-level systems programming project exploring OS internals and hardware-software interfaces. Focuses on memory allocator design, lock-free concurrent data structures, and cache-efficient algorithms. Classification: IN DEVELOPMENT — further details pending.'
   },
   algo: {
-    fileId: 'FILE-005',
+    fileId: 'FILE-006',
     title: 'Algorithm Theory',
     domain: 'Algorithms · Theory',
     rgb: '212,169,68',
@@ -436,6 +452,13 @@ function openProjectModal(key) {
 
   const skillsEl = pmInner.querySelector('.pm-skills');
   skillsEl.innerHTML = p.skills.map(s => `<div class="pm-skill">${s}</div>`).join('');
+
+  const actionsEl = pmInner.querySelector('.pm-actions');
+  const links = p.links || [];
+  actionsEl.hidden = links.length === 0;
+  actionsEl.innerHTML = links
+    .map(link => `<a class="pm-action" href="${link.href}" target="_blank" rel="noopener noreferrer">${link.label}</a>`)
+    .join('');
 
   scrollPaused = true;
   projectModal.classList.add('open');

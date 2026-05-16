@@ -608,6 +608,12 @@ h2 {
 }
 
 /* category-keyed accent colors */
+.project-card[data-category="ml"],
+.project-card[data-category="web"] {
+  --accent: var(--cyan);
+  --accent-rgb: 59, 220, 255;
+}
+
 .project-card[data-category="math"] {
   --accent: var(--cyan);
   --accent-rgb: 59, 220, 255;
@@ -1440,6 +1446,35 @@ h2 {
   font-size: 0.95rem;
   color: var(--muted);
   line-height: 1.75;
+}
+
+.pm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.pm-actions[hidden] {
+  display: none;
+}
+
+.pm-action {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--bg);
+  background: var(--pm-accent, #3bdcff);
+  border: 1px solid var(--pm-accent, #3bdcff);
+  padding: 0.45rem 0.8rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pm-action:hover {
+  background: transparent;
+  color: var(--pm-accent, #3bdcff);
+  box-shadow: 0 0 16px rgba(var(--pm-rgb, 59, 220, 255), 0.25);
 }
 
 /* ===== TRANSMISSION MODAL ===== */
