@@ -2542,6 +2542,10 @@ body.sith-mode .pm-inner {
   --pm-accent: #e8001c !important;
   --pm-rgb:    232, 0, 28 !important;
 }
+body.sith-mode .project-card {
+  --accent:     #e8001c !important;
+  --accent-rgb: 232, 0, 28 !important;
+}
 
 /* =========================================================
    THEME SWITCH — wave-blink preview (no stacking context)
