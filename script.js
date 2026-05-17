@@ -340,7 +340,11 @@ const projectData = {
     status: 'COMPLETED',
     techstack: ['Python', 'XGBoost', 'SHAP', 'Vercel'],
     skills: ['Machine Learning', 'Feature Engineering', 'Monte Carlo Simulation', 'Web Deployment'],
-    brief: 'Built an end-to-end ML system to predict the FIFA 2026 World Cup winner. Scraped real squad data for all 48 nations from Transfermarkt — market values, positions, club leagues — and engineered ~40 features per team including recency-weighted form, ELO ratings, squad depth, and top-league ratio. An XGBoost classifier trained on 8 years of international results predicts win/draw/loss probabilities, with expected goals (xG) models layered on top for scoreline simulation. A 100,000-run Monte Carlo engine simulates the full 48-team bracket including the new best-8 third-place rule. SHAP explanations reveal per-team probability drivers. Deployed as a live static Vercel app. France emerged most likely to win — but the model doesn\'t know it\'s Ronaldo\'s last World Cup.'
+    brief: 'Built an end-to-end ML system to predict the FIFA 2026 World Cup winner. Scraped real squad data for all 48 nations from Transfermarkt — market values, positions, club leagues — and engineered ~40 features per team including recency-weighted form, ELO ratings, squad depth, and top-league ratio. An XGBoost classifier trained on 8 years of international results predicts win/draw/loss probabilities, with expected goals (xG) models layered on top for scoreline simulation. A 100,000-run Monte Carlo engine simulates the full 48-team bracket including the new best-8 third-place rule. SHAP explanations reveal per-team probability drivers. Deployed as a live static Vercel app. France emerged most likely to win — but the model doesn\'t know it\'s Ronaldo\'s last World Cup.',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/6times9is42/wc-predictor' },
+      { label: 'Live Demo', href: 'https://wc-predictor-wine.vercel.app/' }
+    ]
   },
   catscan: {
     fileId: 'FILE-002',
@@ -352,7 +356,10 @@ const projectData = {
     status: 'COMPLETED',
     techstack: ['PyTorch', 'SQL', 'Android', 'Kivy'],
     skills: ['Computer Vision', 'Mobile Development', 'Healthcare AI', 'Model Optimization'],
-    brief: 'Offline Android app enabling early cataract screening in rural India. Implemented guided pupil-centric image capture and preprocessing, reducing model bias and achieving 93% validation accuracy. Built CataractCNN — a lightweight CNN delivering sub-1 second on-device predictions on mid-range Android devices. Collaborated with ophthalmologists from Lokeswarananda Eye Foundation to refine the clinical workflow and validate model predictions against professional diagnoses.'
+    brief: 'Offline Android app enabling early cataract screening in rural India. Implemented guided pupil-centric image capture and preprocessing, reducing model bias and achieving 93% validation accuracy. Built CataractCNN — a lightweight CNN delivering sub-1 second on-device predictions on mid-range Android devices. Collaborated with ophthalmologists from Lokeswarananda Eye Foundation to refine the clinical workflow and validate model predictions against professional diagnoses.',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/6times9is42/CatScan' }
+    ]
   },
   padic: {
     fileId: 'FILE-003',
@@ -524,6 +531,12 @@ document.querySelectorAll('.project-card').forEach(card => {
     const key = card.dataset.project;
     if (key) openProjectModal(key);
   });
+
+  const p = projectData[card.dataset.project];
+  if (p) {
+    card.style.setProperty('--accent', p.accent);
+    card.style.setProperty('--accent-rgb', p.rgb);
+  }
 });
 
 document.querySelectorAll('.tx-read').forEach(btn => {
