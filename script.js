@@ -769,6 +769,9 @@ function triggerThemeSwitch(toSith) {
   /* Theme switches while still in wave 2 flash */
   setTimeout(() => {
     document.body.classList.toggle('sith-mode', toSith);
+    document.getElementById('favicon').href = toSith
+      ? 'images/favicon-sith.svg'
+      : 'images/favicon-jedi.svg';
   }, 470);
 
   /* Cleanup */
