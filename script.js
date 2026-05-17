@@ -370,9 +370,9 @@ const projectData = {
     fileId: 'FILE-004',
     title: 'GigFlow',
     domain: 'Full-Stack · Dashboard',
-    rgb: '59,220,255',
-    accent: '#3bdcff',
-    glyph: 'GF',
+    rgb: '190,100,255',
+    accent: '#be64ff',
+    glyph: '◈',
     status: 'LIVE',
     techstack: ['React 19', 'TypeScript', 'Vite', 'TailwindCSS', 'Node.js', 'Express', 'MongoDB', 'Docker'],
     skills: ['Full-Stack Engineering', 'JWT Authentication', 'Role-Based Access Control', 'Server-Side Filtering', 'Responsive Dashboard UX'],
@@ -382,8 +382,24 @@ const projectData = {
       { label: 'Live Demo', href: 'https://gigflow-smoky.vercel.app' }
     ]
   },
-  systems: {
+  portfolio: {
     fileId: 'FILE-005',
+    title: 'Star Wars Portfolio',
+    domain: 'Web · Creative Coding',
+    rgb: '255,210,0',
+    accent: '#ffd200',
+    glyph: '☆',
+    status: 'LIVE',
+    techstack: ['HTML', 'CSS', 'JavaScript', 'Vercel'],
+    skills: ['Frontend Engineering', 'CSS Animation', 'Creative Design', 'Responsive UI'],
+    brief: 'Personal portfolio built around a Star Wars command-centre aesthetic — dark-themed, fully responsive, deployed on Vercel. Features a full-text glitch scramble on load, a Sith mode colour variant triggered via easter egg, a horizontally scrolling project carousel with holographic card effects, a certifications gallery, and a Transmission Logs blog styled as encrypted Imperial dispatches. Built from scratch with vanilla HTML, CSS, and JavaScript — no frameworks, no build step.',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/6times9is42/star-wars-portfolio' },
+      { label: 'Live Demo', href: 'https://yashvardhan2109.vercel.app/' }
+    ]
+  },
+  systems: {
+    fileId: 'FILE-006',
     title: 'Systems Project',
     domain: 'Systems · C++',
     rgb: '212,169,68',
@@ -395,7 +411,7 @@ const projectData = {
     brief: 'Low-level systems programming project exploring OS internals and hardware-software interfaces. Focuses on memory allocator design, lock-free concurrent data structures, and cache-efficient algorithms. Classification: IN DEVELOPMENT — further details pending.'
   },
   algo: {
-    fileId: 'FILE-006',
+    fileId: 'FILE-007',
     title: 'Algorithm Theory',
     domain: 'Algorithms · Theory',
     rgb: '212,169,68',
