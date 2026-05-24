@@ -405,6 +405,22 @@ const projectData = {
       { label: 'Live Demo', href: 'https://yashvardhan2109.vercel.app/' }
     ]
   },
+  flint: {
+    fileId: 'FILE-006',
+    title: 'Flint',
+    domain: 'Full-Stack · AI Tools',
+    rgb: '245,166,35',
+    accent: '#f5a623',
+    glyph: '◆',
+    status: 'LIVE',
+    techstack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'shadcn/ui', 'Supabase', 'Anthropic API', 'Resend', 'Vercel'],
+    skills: ['Full-Stack Engineering', 'AI Integration', 'SaaS Product Design', 'Database Architecture', 'Transactional Email'],
+    brief: 'Built Flint, a free web app for startup founders and engineering managers to audit their AI tool spending. Users input their tool stack — Cursor, GitHub Copilot, Claude, ChatGPT, Windsurf, and more — and get an instant finance-literate breakdown of where they\'re overspending, which plans to switch, and their total potential savings. A deterministic audit engine applies rule-based recommendations across 8 tools and 5 rule categories; Claude Sonnet generates a personalised ~100-word summary paragraph on top. Each audit gets a unique shareable URL with Open Graph previews for Twitter and Slack unfurls. Includes email lead capture via Resend, IP-based rate limiting, honeypot bot protection, and a Vitest suite covering the full audit engine.',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/6times9is42/flint' },
+      { label: 'Live Demo', href: 'https://flint-audit.vercel.app' }
+    ]
+  },
   systems: {
     fileId: 'FILE-006',
     title: 'Systems Project',
