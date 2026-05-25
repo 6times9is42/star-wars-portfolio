@@ -451,19 +451,15 @@ const projectData = {
 const transmissionData = {
   '001': {
     id: '[TRANSMISSION #001]',
-    stardate: 'STARDATE 2026.05.07',
-    title: 'I Built an ML System to Predict the FIFA 2026 World Cup Winner',
+    stardate: 'STARDATE 2026.05.25',
+    title: 'The Ship of Theseus',
     status: 'LIVE',
     content: `
-      <p>The 2026 FIFA World Cup is 54 days away and my finals just ended. So naturally, I spent the last week building an ML system to figure out who's going to claim the title of World Champion.</p>
-      <p><strong>→ Real squad data</strong> for all 48 nations scraped from Transfermarkt — market values, positions, club leagues — rolled up into team strength profiles across attack, midfield, defense, and goalkeeping.</p>
-      <p><strong>→ ~40 features per team</strong> including recency-weighted form, ELO ratings, squad depth, tournament experience, and top-league ratio.</p>
-      <p><strong>→ An XGBoost classifier</strong> trained on 8 years of international results predicting win/draw/loss probabilities for any matchup, with chronological splits to avoid data leakage.</p>
-      <p><strong>→ Expected goals (xG) models</strong> layered on top for scoreline simulation and tiebreakers.</p>
-      <p><strong>→ A 100,000-run Monte Carlo engine</strong> simulating the full 2026 bracket, including the new 48-team format and the best-8 third-place rule.</p>
-      <p><strong>→ SHAP explanations per team</strong> so you can see exactly what's driving each country's probability.</p>
-      <p>A 100,000 simulations say France is most likely to win. England and Spain are strong competitors for the title. Portugal, however, isn't even in the top 5.</p>
-      <p>Here's what the model doesn't know: it's Cristiano Ronaldo's last World Cup. The model is cold, mathematical, and ruthless. So I'm going to need Portugal to prove it wrong.</p>
+      <p>The Ship of Theseus is one of my favorite philosophical dilemmas. If all the parts of a ship are replaced, one by one, then when every part has been replaced, is it still the same ship? Convincing arguments can be made for both sides. Every time a part is replaced, it remains the same ship, and so when all the parts are replaced, it should still be the same ship. However, if a ship is but the sum of its parts, this must be an entirely new ship, as it shares no parts with the original. The latter argument raises an interesting question: suppose a new ship was built with all the old parts. Is that the Ship of Theseus? It really just depends on your notion of what a ship is; both arguments differ in their definitions and hence are correct in their own ways.</p>
+      <p>I don't want to talk about ships, though. I think this problem is far more fascinating when applied to personal identity. What does one consider identity to be? You'd think it to be your flesh and bones, your physical form. After all, everyone's identifiable by their fingerprints, right? True, and yet it doesn't really make sense when you think about it. Your family, your closest friends, you know them in far deeper ways. The way their eyes shine when that one song comes on, or the way they laugh when you tell them another one of your dumb jokes.</p>
+      <p>I think people are their memories. We are mosaics of everything we've experienced and all the people we've met in our lives. If you ever find me saying I hate Star Wars or Arcane, no fingerprint check required — that isn't me. Does that mean I become a different person every time I like a song I used to dislike? Not really; I'd call that growth rather than change. A new perspective doesn't mean I've forgotten all my old experiences. It just means there's now more that makes me who I am.</p>
+      <p>People like to ask, "One day, if you forgot everything, who would you trust to remind you who you are?" and I cannot answer that question. There are far too many people without whom I wouldn't be who I am today, and many, I hope, whom I'll meet in the future. I think that's why I've never really had a best friend. Every good friend of mine has a unique, refreshing aspect to them, and they're all equally a part of me — parts that it simply wouldn't make sense to compare.</p>
+      <p>Now, let's go back to the Ship of Theseus. While it may be a philosophical dilemma, in my opinion, the new ship is nothing like the old one, for I think the Ship of Theseus isn't just the planks it was built from. It's every treacherous sea it has traveled, every glorious battle it has won, every crew member it has sheltered. Once broken down, I don't think the Ship of Theseus can ever be rebuilt again. What do you think?</p>
     `
   }
 };
