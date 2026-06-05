@@ -425,16 +425,16 @@ const projectData = {
     fileId: 'FILE-007',
     title: 'NTU Atlas',
     domain: 'Web · Campus Tool',
-    rgb: '0,230,100',
-    accent: '#00e664',
+    rgb: '77,255,180',
+    accent: '#4dffb4',
     glyph: '◎',
     status: 'LIVE',
-    techstack: ['HTML', 'CSS', 'JavaScript', 'Vercel'],
+    techstack: ['HTML', 'CSS', 'JavaScript'],
     skills: ['Frontend Engineering', 'Information Architecture', 'UI Design', 'Responsive Layout'],
-    brief: 'Built NTU Atlas — a unified student dashboard that consolidates 60+ official NTU portal links across academics, career, finance, housing, and facilities into a single searchable interface. Features a searchable club directory with 100+ CCAs including Instagram handles and descriptions, a dark-mode topographic UI with animated grid background and radial glow effects, and a marquee ticker for quick-access links. Designed for fellow NTU students who waste time hunting through scattered portals each semester. Deployed on Vercel with zero dependencies.',
+    brief: 'Built NTU Atlas — a unified student dashboard that consolidates 60+ official NTU portal links across academics, career, finance, housing, and facilities into a single searchable interface. Features a searchable club directory with 100+ CCAs including Instagram handles and descriptions, a dark-mode topographic UI with animated grid background and radial glow effects, and a marquee ticker for quick-access links. Designed for fellow NTU students who waste time hunting through scattered portals each semester. Zero dependencies.',
     links: [
       { label: 'GitHub', href: 'https://github.com/6times9is42/ntu-atlas' },
-      { label: 'Live Demo', href: 'https://ntu-atlas.vercel.app' }
+      { label: 'Live Demo', href: 'https://ntuatlas.com' }
     ]
   },
   systems: {
