@@ -20,12 +20,15 @@ Click **SYS: ONLINE** (top-right) to flip the entire UI from Jedi blue to Sith r
 ### Sections
 | Section | Aesthetic |
 |---|---|
-| **Home** | Holographic comm link — incoming transmission with holo-rings, sweep line, and progressive text reveal |
-| **About** | Bio panel with scanline photo frame, stat grid, and skill chips |
-| **Experience** | Interactive starmap — click planets (MAHINDRA NEXUS, CORUSCANT ACADEMY, BESPIN HAVEN) to reveal mission logs |
-| **Projects** | Infinite-scroll card wall with category-keyed glow — ML/AI (cyan), Mobile (gold), Research (green) |
-| **Certifications** | Badge wall with category glow and full-cert modal viewer |
-| **Blog** | Transmission logs — press-briefing aesthetic with flicker header and post modal |
+| **Home** | Holographic comm link: opening crawl (skippable, once per session), "Hello there." greeting, name, current role, and quick jumps |
+| **Pilot Dossier** | Scan-lined photo frame, dossier rows, and a typed terminal readout of roles, honours, and skills |
+| **Charted Systems** | Interactive starmap of every role (Mahindra.AI, CCDS TOP, Hall XIV FOP, C22 × NTU veNTUre, GDG on Campus NTU) with mission logs |
+| **Mission Files** | Draggable, auto-drifting reel of project files with per-project tints and full briefs |
+| **Clearances** | Certificate scans behind a hologram tint, with a full-size viewer |
+| **Transmissions** | Blog posts as transmission logs with a reading modal |
+| **Open a Channel** | Email, LinkedIn, and GitHub |
+
+Navigation: arrow keys, the bridge console, swipe on touch, and `#section` deep links. Respects `prefers-reduced-motion`.
 
 ### Bridge Console
 Fixed bottom navigation computer with:

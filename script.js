@@ -1,83 +1,123 @@
-/* ========= HERO TYPING ========= */
-const heroText = "Hello there, General";
-const typed = document.getElementById("typed-text");
-let charIndex = 0;
+/* ========= ENV ========= */
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const screens = Array.from(document.querySelectorAll('.screen'));
+let currentScreen = 0;
+let jumping = false;
+let introComplete = false;
 
-function typeHero() {
-  if (charIndex < heroText.length) {
-    typed.textContent += heroText[charIndex++];
-    setTimeout(typeHero, 90);
-  } else {
-    document.getElementById('hero-sub')?.classList.add('visible');
-    document.querySelector('.scroll-hint')?.classList.add('visible');
-  }
+function safeSession(fn) {
+  try { return fn(window.sessionStorage); } catch { return null; }
 }
 
-/* ========= SW INTRO ========= */
+/* ========= HERO TYPING ========= */
+const heroText = 'Hello there.';
+const typed = document.getElementById('typed-text');
+const hero = document.getElementById('hero');
+
+function typeHero() {
+  if (reducedMotion) {
+    typed.textContent = heroText;
+    hero.classList.add('revealed');
+    return;
+  }
+  let i = 0;
+  (function tick() {
+    if (i < heroText.length) {
+      typed.textContent += heroText[i++];
+      setTimeout(tick, 85);
+    } else {
+      setTimeout(() => hero.classList.add('revealed'), 250);
+    }
+  })();
+}
+
+/* ========= OPENING CRAWL ========= */
 const swIntro = document.getElementById('sw-intro');
 const swLine1 = document.getElementById('sw-line1');
 const swLine2 = document.getElementById('sw-line2');
+const introTimers = [];
+
+function later(fn, ms) {
+  const id = setTimeout(fn, ms);
+  introTimers.push(id);
+  return id;
+}
 
 function typeSwLine(el, text, startDelay, charDelay, cb) {
-  setTimeout(() => {
+  later(() => {
     el.classList.add('sw-visible');
     let i = 0;
-    function tick() {
+    (function tick() {
       if (i < text.length) {
         el.textContent += text[i++];
-        setTimeout(tick, charDelay);
+        later(tick, charDelay);
       } else if (cb) {
         cb();
       }
-    }
-    tick();
+    })();
   }, startDelay);
 }
 
-let introComplete = false;
+function finishIntro(fast) {
+  if (introComplete) return;
+  introComplete = true;
+  introTimers.forEach(clearTimeout);
+  safeSession(s => s.setItem('introSeen', '1'));
 
-typeSwLine(swLine1, 'A long time ago in a galaxy far,', 300, 65, () => {
-  typeSwLine(swLine2, 'far away....', 500, 35, () => {
-    setTimeout(() => {
-      swIntro.classList.add('fade-out');
-      setTimeout(() => {
-        swIntro.classList.add('hidden');
-        screens[0].classList.add('active');
-        document.getElementById('nav-console').classList.add('console-ready');
-        document.querySelectorAll('.hero-coord').forEach(el => el.classList.add('coord-visible'));
-        introComplete = true;
-        typeHero();
-      }, 1200);
-    }, 1600);
+  swIntro.classList.add('fade-out');
+  later(() => swIntro.classList.add('hidden'), fast ? 400 : 1200);
+
+  setScreenState(0);
+  screens[0].classList.add('active');
+  document.getElementById('nav-console').classList.add('console-ready');
+  document.querySelectorAll('.hud-coord').forEach(el => el.classList.add('coord-visible'));
+  updateConsole(0);
+  requestAnimationFrame(() => positionShip(0, false));
+  setTimeout(typeHero, fast ? 300 : 700);
+}
+
+function startIntro() {
+  const introSeen = safeSession(s => s.getItem('introSeen'));
+  if (reducedMotion || introSeen) {
+    swIntro.classList.add('hidden');
+    finishIntro(true);
+    return;
+  }
+  typeSwLine(swLine1, 'A long time ago in a galaxy far,', 300, 60, () => {
+    typeSwLine(swLine2, 'far away....', 450, 40, () => later(() => finishIntro(false), 1500));
   });
-});
-
-/* ========= SCREEN SYSTEM ========= */
-const screens = Array.from(document.querySelectorAll(".screen"));
-let currentScreen = 0;
-let jumping = false;
+  swIntro.addEventListener('click', () => finishIntro(true));
+  document.addEventListener('keydown', function skip() {
+    document.removeEventListener('keydown', skip);
+    finishIntro(true);
+  }, { once: true });
+}
 
 /* ========= HYPERSPACE CANVAS ========= */
-const canvas = document.getElementById("hyperspace");
-const ctx = canvas.getContext("2d");
+const canvas = document.getElementById('hyperspace');
+const ctx = canvas.getContext('2d');
 
 let w, h;
 let stars = [];
-let starColor = '#ffffff';
+let starColor = '#e8f4ff';
 
-const STAR_COUNT = 600;
-const BASE_SPEED = 2;
-const MAX_JUMP_SPEED = 55;
+const STAR_COUNT = 520;
+const BASE_SPEED = reducedMotion ? 0.4 : 2;
+const MAX_JUMP_SPEED = reducedMotion ? 0.4 : 55;
 
 let currentSpeed = BASE_SPEED;
 let targetSpeed = BASE_SPEED;
 
-let shakeIntensity = 0;
-
 function resize() {
-  w = canvas.width = window.innerWidth;
-  h = canvas.height = window.innerHeight;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  w = window.innerWidth;
+  h = window.innerHeight;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   stars = Array.from({ length: STAR_COUNT }, createStar);
+  ctx.fillStyle = getComputedStyle(document.body).backgroundColor;
+  ctx.fillRect(0, 0, w, h);
 }
 
 function createStar() {
@@ -91,25 +131,26 @@ function createStar() {
 }
 
 resize();
-window.addEventListener("resize", resize);
+window.addEventListener('resize', () => {
+  resize();
+  positionShip(currentScreen, false);
+});
 
-/* ========= ANIMATION LOOP ========= */
 function animate() {
-  ctx.fillStyle = "rgba(5,6,10,0.35)";
+  ctx.fillStyle = document.body.classList.contains('sith-mode')
+    ? 'rgba(10,4,4,0.35)'
+    : 'rgba(5,7,13,0.35)';
   ctx.fillRect(0, 0, w, h);
 
   currentSpeed += (targetSpeed - currentSpeed) * 0.06;
 
-  const shakeX = (Math.random() - 0.5) * shakeIntensity;
-  const shakeY = (Math.random() - 0.5) * shakeIntensity;
-
   ctx.save();
-  ctx.translate(w / 2 + shakeX, h / 2 + shakeY);
+  ctx.translate(w / 2, h / 2);
+  ctx.strokeStyle = starColor;
 
   stars.forEach(star => {
     star.px = (star.x / star.z) * w;
     star.py = (star.y / star.z) * h;
-
     star.z -= currentSpeed;
 
     if (star.z <= 0) {
@@ -119,10 +160,10 @@ function animate() {
 
     const x = (star.x / star.z) * w;
     const y = (star.y / star.z) * h;
+    const depth = 1 - star.z / w;
 
-    ctx.strokeStyle = starColor;
-    ctx.lineWidth = jumping ? 1.4 : 1;
-
+    ctx.globalAlpha = 0.25 + depth * 0.75;
+    ctx.lineWidth = jumping ? 1.4 : 0.6 + depth * 1.2;
     ctx.beginPath();
     ctx.moveTo(star.px, star.py);
     ctx.lineTo(x, y);
@@ -137,24 +178,27 @@ animate();
 
 /* ========= TERMINAL (ABOUT) ========= */
 const termLines = [
-  { cls: 'blank' },
-  { cls: 'prompt', text: '$ whoami' },
+  { cls: 'prompt', text: 'whoami' },
   { cls: 'out', text: 'Yashvardhan Pattanashetti' },
-  { cls: 'dim', text: 'CS @ NTU Singapore · GPA 4.24 · Jane Street Estimathon Winner' },
+  { cls: 'dim', text: 'BComp Computer Science (Hons) · NTU Singapore · 2025 → 2029' },
   { cls: 'blank' },
-  { cls: 'prompt', text: '$ cat background.txt' },
-  { cls: 'out', text: 'AIR 215 · JEE Main  |  AIR 777 · JEE Advanced' },
-  { cls: 'out', text: 'Prev: Research Intern @ Mahindra.AI' },
+  { cls: 'prompt', text: 'cat now.txt' },
+  { cls: 'hl', text: '▸ VP Academics · Google Developer Group on Campus NTU' },
+  { cls: 'out', text: '  Quant Research Intern · C22 × NTU veNTUre   (2026)' },
+  { cls: 'out', text: '  Research Intern · Mahindra.AI               (2025)' },
   { cls: 'blank' },
-  { cls: 'prompt', text: '$ cat skills.txt' },
-  { cls: 'out', text: '[ML/AI]     Python · XGBoost · CNNs · RAG · SHAP' },
-  { cls: 'out', text: '[SYSTEMS]   C · C++ · Java · SQL · Git/GitHub' },
-  { cls: 'out', text: '[WEB]       JavaScript · React Native · HTML · CSS' },
+  { cls: 'prompt', text: 'cat honours.txt' },
+  { cls: 'out', text: '1st Place · Jane Street Estimathon 2026' },
+  { cls: 'out', text: 'SAT 1530 (perfect Math) · AIR 215 JEE Main · AIR 777 JEE Advanced' },
+  { cls: 'dim', text: 'National Olympiad qualifier · Mathematics, Astronomy, Junior Science' },
   { cls: 'blank' },
-  { cls: 'prompt', text: '$ cat interests.txt' },
-  { cls: 'out', text: 'Mathematics  · Quantitative Finance  · Quantum Computing ·  Football ' },
+  { cls: 'prompt', text: 'cat skills.txt' },
+  { cls: 'key', text: '[LANG]   Python · C · C++ · Java · TypeScript · SQL' },
+  { cls: 'key', text: '[ML]     PyTorch · XGBoost · scikit-learn · SHAP · pandas' },
+  { cls: 'key', text: '[STACK]  Next.js · React Native · FastAPI · Express · Docker' },
   { cls: 'blank' },
-  { cls: 'prompt', text: '$ _' },
+  { cls: 'prompt', text: 'cat off-duty.txt' },
+  { cls: 'out', text: 'Maths · Basketball (Clusters runners-up) · Football · Chess' },
 ];
 
 let terminalRan = false;
@@ -163,41 +207,55 @@ function runTerminal() {
   const output = document.getElementById('terminal-output');
   let i = 0;
 
-  function next() {
-    if (i >= termLines.length) {
-      const cursor = document.createElement('span');
-      cursor.className = 'terminal-cursor';
-      output.appendChild(cursor);
-      return;
-    }
-    const line = termLines[i++];
+  function addLine(line) {
     const el = document.createElement('div');
     el.className = 't-line';
-
-    if (line.cls === 'blank') {
-      el.innerHTML = '<span class="t-blank"></span>';
-    } else if (line.cls === 'prompt') {
-      el.innerHTML = `<span class="t-prompt">${line.text}</span>`;
-    } else {
-      el.innerHTML = `<span class="t-${line.cls}">${line.text}</span>`;
-    }
-
+    const span = document.createElement('span');
+    span.className = line.cls === 'blank' ? 't-blank' : `t-${line.cls}`;
+    if (line.text) span.textContent = line.text;
+    el.appendChild(span);
     output.appendChild(el);
-
-    const delay = line.cls === 'prompt' ? 550 : line.cls === 'blank' ? 80 : 180;
-    setTimeout(next, delay);
   }
 
-  next();
+  function finish() {
+    const el = document.createElement('div');
+    el.className = 't-line';
+    el.innerHTML = '<span class="t-prompt"></span><span class="terminal-cursor"></span>';
+    output.appendChild(el);
+  }
+
+  if (reducedMotion) {
+    termLines.forEach(addLine);
+    finish();
+    return;
+  }
+
+  (function next() {
+    if (i >= termLines.length) return finish();
+    const line = termLines[i++];
+    addLine(line);
+    const delay = line.cls === 'prompt' ? 420 : line.cls === 'blank' ? 60 : 120;
+    setTimeout(next, delay);
+  })();
+}
+
+/* ========= SCREEN STATE ========= */
+function setScreenState(activeIdx) {
+  screens.forEach((s, i) => {
+    const on = i === activeIdx;
+    s.inert = !on;
+    s.setAttribute('aria-hidden', on ? 'false' : 'true');
+  });
 }
 
 /* ========= HYPERSPACE JUMP ========= */
+const JUMP_MS = reducedMotion ? 250 : 1500;
+
 function jumpTo(index) {
-  if (jumping || index === currentScreen) return;
+  if (jumping || index === currentScreen || index < 0 || index >= screens.length) return;
 
   jumping = true;
   targetSpeed = MAX_JUMP_SPEED;
-  shakeIntensity = 0;
 
   const direction = index > currentScreen ? 'right' : 'left';
   const departing = screens[currentScreen];
@@ -205,78 +263,36 @@ function jumpTo(index) {
   departing.classList.add(direction === 'right' ? 'departing-right' : 'departing-left');
 
   positionShip(index, true);
+  updateConsole(index);
   document.getElementById('ct-speed').textContent = 'HYPERSPACE';
   document.getElementById('ct-status').textContent = 'JUMPING';
 
-  setTimeout(() => {
-    shakeIntensity = 0;
-  }, 300);
+  setTimeout(() => { targetSpeed = BASE_SPEED; }, JUMP_MS * 0.7);
 
   setTimeout(() => {
     departing.classList.remove('departing-right', 'departing-left');
-    screens[index].classList.add('active');
+    const arriving = screens[index];
+    arriving.scrollTop = 0;
+    arriving.classList.add('active');
     currentScreen = index;
-    updateConsole(index);
+    setScreenState(index);
     document.getElementById('ct-speed').textContent = 'SUB-LIGHT';
     document.getElementById('ct-status').textContent = 'NOMINAL';
-    if (screens[index].id === 'about' && !terminalRan) {
+    if (arriving.id === 'about' && !terminalRan) {
       terminalRan = true;
-      setTimeout(runTerminal, 300);
+      setTimeout(runTerminal, 250);
     }
-  }, 2000);
+    if (location.hash !== '#' + arriving.id) {
+      history.replaceState(null, '', index === 0 ? location.pathname : '#' + arriving.id);
+    }
+  }, JUMP_MS);
 
-  setTimeout(() => {
-    targetSpeed = BASE_SPEED;
-    shakeIntensity = 0;
-  }, 1400);
-
-  setTimeout(() => {
-    jumping = false;
-  }, 2200);
+  setTimeout(() => { jumping = false; }, JUMP_MS + 150);
 }
 
-/* CLICK ANYWHERE on hero → go to about */
-document.body.addEventListener("click", () => {
-  if (!introComplete) return;
-  if (currentScreen === 0) jumpTo(1);
+document.querySelectorAll('[data-goto]').forEach(btn => {
+  btn.addEventListener('click', () => jumpTo(parseInt(btn.dataset.goto, 10)));
 });
-
-/* ========= PROJECT INFINITE SCROLL ========= */
-const scrollTrack = document.getElementById('scroll-track');
-let scrollPos = 0;
-let scrollVel = 1.0;
-const MIN_VEL = 1.0;
-let scrollPaused = false;
-
-function animateScroll() {
-  if (!scrollPaused) {
-    scrollVel *= 0.97;
-    if (Math.abs(scrollVel) < MIN_VEL) scrollVel = MIN_VEL;
-
-    scrollPos += scrollVel;
-
-    const half = scrollTrack.scrollWidth / 2;
-    if (scrollPos >= half) scrollPos -= half;
-    if (scrollPos < 0) scrollPos += half;
-
-    scrollTrack.style.transform = `translate3d(${-scrollPos}px, 0, 0)`;
-  }
-  requestAnimationFrame(animateScroll);
-}
-
-animateScroll();
-
-document.querySelector('.horizontal-scroll').addEventListener('wheel', e => {
-  e.preventDefault();
-  scrollVel += e.deltaY * 0.003;
-}, { passive: false });
-
-/* Badge and blog content clicks don't trigger navigation */
-document.querySelector('.cert-grid').addEventListener('click', e => e.stopPropagation());
-document.querySelector('.transmissions').addEventListener('click', e => e.stopPropagation());
-document.querySelector('.terminal').addEventListener('click', e => e.stopPropagation());
-document.querySelector('.nav-console').addEventListener('click', e => e.stopPropagation());
-document.querySelector('.starmap-layout').addEventListener('click', e => e.stopPropagation());
 
 /* ========= BRIDGE CONSOLE ========= */
 const consoleShip = document.getElementById('console-ship');
@@ -285,21 +301,21 @@ const consoleWps = document.querySelectorAll('.console-wp');
 
 const SCREEN_META = [
   { heading: '000°', sector: 'ALPHA-01' },
-  { heading: '060°', sector: 'BETA-04' },
-  { heading: '120°', sector: 'GAMMA-07' },
-  { heading: '180°', sector: 'DELTA-12' },
-  { heading: '240°', sector: 'EPSILON-15' },
-  { heading: '300°', sector: 'OMEGA-99' },
+  { heading: '051°', sector: 'BETA-04' },
+  { heading: '103°', sector: 'GAMMA-07' },
+  { heading: '154°', sector: 'DELTA-12' },
+  { heading: '206°', sector: 'EPSILON-15' },
+  { heading: '257°', sector: 'ZETA-21' },
+  { heading: '309°', sector: 'OMEGA-99' },
 ];
 
-function positionShip(index, animate) {
-  const wps = consoleTrack.querySelectorAll('.console-wp');
-  const targetWp = wps[index];
+function positionShip(index, animated) {
+  const targetWp = consoleWps[index];
   if (!targetWp) return;
   const trackRect = consoleTrack.getBoundingClientRect();
   const wpRect = targetWp.getBoundingClientRect();
   const left = wpRect.left - trackRect.left + wpRect.width / 2;
-  if (!animate) {
+  if (!animated) {
     consoleShip.style.transition = 'none';
     consoleShip.style.left = left + 'px';
     requestAnimationFrame(() => { consoleShip.style.transition = ''; });
@@ -312,154 +328,145 @@ function updateConsole(index) {
   const meta = SCREEN_META[index] || SCREEN_META[0];
   document.getElementById('ct-heading').textContent = meta.heading;
   document.getElementById('ct-sector').textContent = meta.sector;
-  consoleWps.forEach((wp, i) => wp.classList.toggle('active', i === index));
+  consoleWps.forEach((wp, i) => {
+    wp.classList.toggle('active', i === index);
+    if (i === index) wp.setAttribute('aria-current', 'page');
+    else wp.removeAttribute('aria-current');
+  });
 }
 
 consoleWps.forEach(wp => {
-  wp.addEventListener('click', e => {
-    e.stopPropagation();
+  wp.addEventListener('click', () => {
     const idx = parseInt(wp.dataset.idx, 10);
     if (!isNaN(idx)) jumpTo(idx);
   });
 });
 
-window.addEventListener('load', () => {
-  positionShip(0, false);
-  updateConsole(0);
-});
+window.addEventListener('load', () => positionShip(currentScreen, false));
 
 /* ========= PROJECT DATA ========= */
+const projectOrder = ['fifa', 'flint', 'ntu-atlas', 'catscan', 'gigflow', 'padic', 'portfolio'];
+
 const projectData = {
   fifa: {
     fileId: 'FILE-001',
+    year: '2026',
     title: 'FIFA 2026 World Cup Predictor',
-    domain: 'ML · Data Science',
-    rgb: '59,220,255',
-    accent: '#3bdcff',
-    glyph: '⚽',
-    status: 'COMPLETED',
-    techstack: ['Python', 'XGBoost', 'SHAP', 'Vercel'],
-    skills: ['Machine Learning', 'Feature Engineering', 'Monte Carlo Simulation', 'Web Deployment'],
-    brief: 'Built an end-to-end ML system to predict the FIFA 2026 World Cup winner. Scraped real squad data for all 48 nations from Transfermarkt — market values, positions, club leagues — and engineered ~40 features per team including recency-weighted form, ELO ratings, squad depth, and top-league ratio. An XGBoost classifier trained on 8 years of international results predicts win/draw/loss probabilities, with expected goals (xG) models layered on top for scoreline simulation. A 100,000-run Monte Carlo engine simulates the full 48-team bracket including the new best-8 third-place rule. SHAP explanations reveal per-team probability drivers. Deployed as a live static Vercel app. France emerged most likely to win — but the model doesn\'t know it\'s Ronaldo\'s last World Cup.',
-    links: [
-      { label: 'GitHub', href: 'https://github.com/6times9is42/wc-predictor' },
-      { label: 'Live Demo', href: 'https://wc-predictor-wine.vercel.app/' }
-    ]
-  },
-  catscan: {
-    fileId: 'FILE-002',
-    title: 'CatScan',
-    domain: 'ML · Mobile',
-    rgb: '255,255,255',
-    accent: '#ffffff',
-    glyph: '◉',
-    status: 'COMPLETED',
-    techstack: ['PyTorch', 'SQL', 'Android', 'Kivy'],
-    skills: ['Computer Vision', 'Mobile Development', 'Healthcare AI', 'Model Optimization'],
-    brief: 'Offline Android app enabling early cataract screening in rural India. Implemented guided pupil-centric image capture and preprocessing, reducing model bias and achieving 93% validation accuracy. Built CataractCNN — a lightweight CNN delivering sub-1 second on-device predictions on mid-range Android devices. Collaborated with ophthalmologists from Lokeswarananda Eye Foundation to refine the clinical workflow and validate model predictions against professional diagnoses.',
-    links: [
-      { label: 'GitHub', href: 'https://github.com/6times9is42/CatScan' }
-    ]
-  },
-  padic: {
-    fileId: 'FILE-003',
-    title: 'p-Adic Calculus Research',
-    domain: 'Math · Research',
-    rgb: '77,255,180',
-    accent: '#4dffb4',
-    glyph: '∂',
-    status: 'COMPLETED',
-    techstack: ['LaTeX', 'Formal Proofs'],
-    skills: ['Calculus', 'Number Theory', 'Mathematical Writing', 'Research'],
-    brief: 'Led development of a first-principles framework for differentiation on p-adic numbers, formally defining limits, continuity, and derivatives via p-adic ultrametric. Collaborated with team to prove p-adic analogues of 5 core calculus rules — product rule, chain rule, mean value theorem, L\'Hôpital\'s rule, and Taylor expansion — and analysed real-valued representations through the canonical map, exposing fundamental behavioural distinctions from classical real analysis.'
-  },
-  gigflow: {
-    fileId: 'FILE-004',
-    title: 'GigFlow',
-    domain: 'Full-Stack · Dashboard',
-    rgb: '245,166,35',
-    accent: '#f5a623',
-    glyph: '◈',
+    domain: 'ML · Simulation',
+    tint: 'oklch(0.84 0.13 214)',
+    glyph: '⬡',
     status: 'LIVE',
-    techstack: ['React 19', 'TypeScript', 'Vite', 'TailwindCSS', 'Node.js', 'Express', 'MongoDB', 'Docker'],
-    skills: ['Full-Stack Engineering', 'JWT Authentication', 'Role-Based Access Control', 'Server-Side Filtering', 'Responsive Dashboard UX'],
-    brief: 'Built a production-grade MERN lead management dashboard with strict TypeScript across the client and API. GigFlow supports JWT authentication with admin and sales roles, per-lead ownership enforcement, lead CRUD, debounced search, server-side filtering by status/source, sorting, pagination, URL-synced filter state, and CSV export. The interface includes dark/light mode persistence, mobile layouts, loading and empty states, toast feedback, keyboard shortcuts, and Docker Compose for one-command local development.',
+    summary: 'XGBoost plus 100,000 Monte Carlo bracket runs across all 48 nations, with SHAP explanations for every team.',
+    chips: ['Python', 'XGBoost', 'PyTorch', 'SHAP'],
+    techstack: ['Python', 'XGBoost', 'PyTorch', 'FastAPI', 'SHAP', 'Vercel'],
+    skills: ['Machine Learning', 'Feature Engineering', 'Monte Carlo Simulation', 'Model Explainability'],
+    brief: 'An end-to-end system for forecasting the 2026 World Cup. I scraped squad data for all 48 nations from Transfermarkt and engineered 20+ team-level features: ELO, xG, rolling form, squad depth, and market value. An XGBoost multiclass classifier predicts match outcomes, with separate xG regressors for scorelines. A Monte Carlo engine plays the full 48-team bracket 100,000 times, including the official best-third-place rules, giving win probabilities at ±0.11% standard error. SHAP explanations are precomputed per team and every output is exported to JSON, so the whole thing deploys as a fast static site.',
     links: [
-      { label: 'GitHub', href: 'https://github.com/6times9is42/gigflow' },
-      { label: 'Live Demo', href: 'https://gigflow-smoky.vercel.app' }
-    ]
-  },
-  portfolio: {
-    fileId: 'FILE-005',
-    title: 'Star Wars Portfolio',
-    domain: 'Web · Creative Coding',
-    rgb: '59,220,255',
-    accent: '#3bdcff',
-    glyph: '☆',
-    status: 'LIVE',
-    techstack: ['HTML', 'CSS', 'JavaScript', 'Vercel'],
-    skills: ['Frontend Engineering', 'CSS Animation', 'Creative Design', 'Responsive UI'],
-    brief: 'Personal portfolio built around a Star Wars command-centre aesthetic — dark-themed, fully responsive, deployed on Vercel. Features a full-text glitch scramble on load, a Sith mode colour variant triggered via easter egg, a horizontally scrolling project carousel with holographic card effects, a certifications gallery, and a Transmission Logs blog styled as encrypted Imperial dispatches. Built from scratch with vanilla HTML, CSS, and JavaScript — no frameworks, no build step.',
-    links: [
-      { label: 'GitHub', href: 'https://github.com/6times9is42/star-wars-portfolio' },
-      { label: 'Live Demo', href: 'https://yashvardhan2109.vercel.app/' }
+      { label: 'Live demo', href: 'https://wc-predictor-wine.vercel.app/', primary: true },
+      { label: 'GitHub', href: 'https://github.com/6times9is42/wc-predictor' }
     ]
   },
   flint: {
-    fileId: 'FILE-006',
+    fileId: 'FILE-002',
+    year: '2026',
     title: 'Flint',
     domain: 'Full-Stack · AI Tools',
-    rgb: '190,100,255',
-    accent: '#be64ff',
+    tint: 'oklch(0.72 0.18 300)',
     glyph: '◆',
     status: 'LIVE',
+    summary: 'Audits a startup\'s AI subscriptions against live vendor pricing and writes a shareable, CFO-tone report in under three minutes.',
+    chips: ['Next.js', 'TypeScript', 'Supabase', 'Claude API'],
     techstack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'shadcn/ui', 'Supabase', 'Anthropic API', 'Resend', 'Vercel'],
-    skills: ['Full-Stack Engineering', 'AI Integration', 'SaaS Product Design', 'Database Architecture', 'Transactional Email'],
-    brief: 'Built Flint, a free web app for startup founders and engineering managers to audit their AI tool spending. Users input their tool stack — Cursor, GitHub Copilot, Claude, ChatGPT, Windsurf, and more — and get an instant finance-literate breakdown of where they\'re overspending, which plans to switch, and their total potential savings. A deterministic audit engine applies rule-based recommendations across 8 tools and 5 rule categories; Claude Sonnet generates a personalised ~100-word summary paragraph on top. Each audit gets a unique shareable URL with Open Graph previews for Twitter and Slack unfurls. Includes email lead capture via Resend, IP-based rate limiting, honeypot bot protection, and a Vitest suite covering the full audit engine.',
+    skills: ['Full-Stack Engineering', 'AI Integration', 'Product Design', 'Database Architecture'],
+    brief: 'Founders and engineering managers list their AI tool stack (Cursor, Copilot, Claude, ChatGPT, Windsurf and more) and Flint returns a finance-literate breakdown of where they\'re overspending, which plans to switch to, and the total they could save. A deterministic audit engine applies rule-based recommendations across 8 tools and 5 rule categories; Claude writes a short personalised summary on top. Every audit gets a unique shareable URL with Open Graph previews for Slack and X unfurls. Includes lead capture via Resend, IP rate limiting, honeypot bot protection, and a Vitest suite covering the audit engine.',
     links: [
-      { label: 'GitHub', href: 'https://github.com/6times9is42/flint' },
-      { label: 'Live Demo', href: 'https://flint-audit.vercel.app' }
+      { label: 'Live demo', href: 'https://flint-audit.vercel.app', primary: true },
+      { label: 'GitHub', href: 'https://github.com/6times9is42/flint' }
     ]
   },
   'ntu-atlas': {
-    fileId: 'FILE-007',
+    fileId: 'FILE-003',
+    year: '2026',
     title: 'NTU Atlas',
     domain: 'Web · Campus Tool',
-    rgb: '77,255,180',
-    accent: '#4dffb4',
+    tint: 'oklch(0.86 0.15 165)',
     glyph: '◎',
     status: 'LIVE',
-    techstack: ['HTML', 'CSS', 'JavaScript'],
+    summary: 'ntuatlas.com puts NTU\'s scattered portals, a filterable clubs index, and a freshmen checklist in one searchable place.',
+    chips: ['HTML', 'CSS', 'JavaScript', 'Vercel'],
+    techstack: ['HTML', 'CSS', 'JavaScript', 'Vercel'],
     skills: ['Frontend Engineering', 'Information Architecture', 'UI Design', 'Responsive Layout'],
-    brief: 'Built NTU Atlas — a unified student dashboard that consolidates 60+ official NTU portal links across academics, career, finance, housing, and facilities into a single searchable interface. Features a searchable club directory with 100+ CCAs including Instagram handles and descriptions, a dark-mode topographic UI with animated grid background and radial glow effects, and a marquee ticker for quick-access links. Designed for fellow NTU students who waste time hunting through scattered portals each semester. Zero dependencies.',
+    brief: 'NTU\'s digital life is spread over dozens of portals that every student hunts for each semester. NTU Atlas consolidates them: a searchable directory spanning 10 portal categories (academics, career, finance, housing, facilities and more), a filterable index of clubs and societies, and a freshmen orientation checklist. Dark topographic UI with an animated grid and ambient glow, built with zero dependencies and deployed at ntuatlas.com.',
     links: [
-      { label: 'GitHub', href: 'https://github.com/6times9is42/ntu-atlas' },
-      { label: 'Live Demo', href: 'https://ntuatlas.com' }
+      { label: 'Visit ntuatlas.com', href: 'https://ntuatlas.com', primary: true },
+      { label: 'GitHub', href: 'https://github.com/6times9is42/ntu-atlas' }
     ]
   },
-  systems: {
-    fileId: 'FILE-008',
-    title: 'Systems Project',
-    domain: 'Systems · C++',
-    rgb: '212,169,68',
-    accent: '#d4a944',
-    glyph: '⚙',
-    status: 'IN DEVELOPMENT',
-    techstack: ['C', 'C++', 'POSIX', 'Assembly', 'GDB'],
-    skills: ['Systems Programming', 'Memory Management', 'Concurrency', 'Performance Optimization'],
-    brief: 'Low-level systems programming project exploring OS internals and hardware-software interfaces. Focuses on memory allocator design, lock-free concurrent data structures, and cache-efficient algorithms. Classification: IN DEVELOPMENT — further details pending.'
+  catscan: {
+    fileId: 'FILE-004',
+    year: '2025',
+    title: 'CatScan',
+    domain: 'ML · Mobile Health',
+    tint: 'oklch(0.93 0.03 240)',
+    glyph: '◉',
+    status: 'COMPLETED',
+    summary: 'Offline cataract screening for rural India. 93% validation accuracy and sub-second inference on mid-range Android.',
+    chips: ['TensorFlow', 'Keras', 'React Native', 'Android'],
+    techstack: ['Python', 'TensorFlow / Keras', 'React Native', 'Android'],
+    skills: ['Computer Vision', 'Mobile Development', 'Healthcare AI', 'Model Optimisation'],
+    brief: 'Specialist eye care is scarce in rural India, so CatScan screens for cataracts on the phone, fully offline. Guided pupil-centred capture and preprocessing reduce bias in the input; CataractCNN, a lightweight network I built for the job, reaches 93% validation accuracy with sub-1-second inference on mid-range Android devices. Ophthalmologists from the Lokeswarananda Eye Foundation helped refine the clinical workflow and validated predictions against professional diagnoses.',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/6times9is42/CatScan', primary: true }
+    ]
   },
-  algo: {
+  gigflow: {
+    fileId: 'FILE-005',
+    year: '2026',
+    title: 'GigFlow',
+    domain: 'Full-Stack · Dashboard',
+    tint: 'oklch(0.8 0.15 70)',
+    glyph: '◈',
+    status: 'LIVE',
+    summary: 'Lead management dashboard with JWT auth, RBAC, debounced server-side search, URL-synced pagination and CSV export.',
+    chips: ['TypeScript', 'React', 'Express', 'MongoDB'],
+    techstack: ['React 19', 'TypeScript', 'Vite', 'Tailwind CSS', 'Express', 'MongoDB', 'JWT', 'Docker'],
+    skills: ['Full-Stack Engineering', 'Authentication', 'Role-Based Access Control', 'Dashboard UX'],
+    brief: 'A production-grade lead management dashboard in strict TypeScript, client and API. JWT authentication with admin and sales roles, per-lead ownership enforcement, full CRUD, debounced search, server-side filtering by status and source, sorting, URL-synced pagination, and CSV export. Dark and light themes, mobile layouts, loading and empty states, toasts and keyboard shortcuts. Deployed on Vercel, Render and MongoDB Atlas, with Docker Compose for one-command local setup.',
+    links: [
+      { label: 'Live demo', href: 'https://gigflow-smoky.vercel.app', primary: true },
+      { label: 'GitHub', href: 'https://github.com/6times9is42/gigflow' }
+    ]
+  },
+  padic: {
+    fileId: 'FILE-006',
+    year: '2026',
+    title: 'Calculus on the p-adic Numbers',
+    domain: 'Maths · Research Paper',
+    tint: 'oklch(0.8 0.12 84)',
+    glyph: '∂',
+    status: 'COMPLETED',
+    summary: 'A first-principles derivative on the field of p-adic numbers, with proofs of five classic calculus rules.',
+    chips: ['Analysis', 'Number Theory', 'LaTeX'],
+    techstack: ['LaTeX', 'Formal Proofs'],
+    skills: ['Real & p-adic Analysis', 'Number Theory', 'Mathematical Writing', 'Research'],
+    brief: 'Calculus usually lives on the real numbers. This paper rebuilds it from first principles on the p-adic numbers, where distance is measured by divisibility and the ultrametric inequality makes every triangle isosceles. We formally define limits, continuity and derivatives via the p-adic ultrametric, prove p-adic analogues of five core rules (product rule, chain rule, mean value theorem, L\'Hôpital\'s rule and Taylor expansion), and study real-valued representations through the canonical map, which exposes where p-adic behaviour departs from classical analysis.'
+  },
+  portfolio: {
     fileId: 'FILE-007',
-    title: 'Algorithm Theory',
-    domain: 'Algorithms · Theory',
-    rgb: '212,169,68',
-    accent: '#d4a944',
-    glyph: '∞',
-    status: 'IN DEVELOPMENT',
-    techstack: ['C++', 'Python', 'LaTeX', 'LEAN4'],
-    skills: ['Algorithm Design', 'Complexity Theory', 'Dynamic Programming', 'Formal Verification'],
-    brief: 'Theoretical CS project at the intersection of combinatorics and computational complexity. Investigates approximation algorithms for NP-hard problems, explores parameterized complexity, and develops formal proofs of correctness using proof assistants. Classification: IN DEVELOPMENT — further details pending.'
+    year: '2026',
+    title: 'This Portfolio',
+    domain: 'Web · Creative Coding',
+    tint: 'oklch(0.84 0.13 214)',
+    glyph: '☆',
+    status: 'LIVE',
+    summary: 'You\'re inside it. Hyperspace jumps, a starmap résumé, and a Sith mode hiding in plain sight.',
+    chips: ['HTML', 'CSS', 'JavaScript', 'Canvas'],
+    techstack: ['HTML', 'CSS', 'JavaScript', 'Canvas 2D', 'Vercel'],
+    skills: ['Frontend Engineering', 'Motion Design', 'Creative Coding', 'Accessibility'],
+    brief: 'A command-deck portfolio built from scratch with vanilla HTML, CSS and JavaScript: no frameworks, no build step. A canvas starfield accelerates into hyperspace between sections, experience is charted as a starmap, and a full-text glitch scramble flips the entire UI between Jedi and Sith palettes (try the SYS indicator, top right). Respects reduced-motion settings and works with keyboard, mouse, and touch.',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/6times9is42/star-wars-portfolio', primary: true }
+    ]
   }
 };
 
@@ -480,7 +487,173 @@ const transmissionData = {
   }
 };
 
-/* ========= PROJECT MODAL ========= */
+/* ========= PROJECT REEL ========= */
+const scrollTrack = document.getElementById('scroll-track');
+const carousel = document.getElementById('carousel');
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function cardHtml(key, clone) {
+  const p = projectData[key];
+  const live = p.status === 'LIVE';
+  const linkHint = (p.links || []).length ? (p.links.some(l => /demo|visit/i.test(l.label)) ? 'DEMO · CODE' : 'CODE') : 'PAPER';
+  return `
+    <button class="project-card" type="button" data-project="${key}" style="--tint:${p.tint}"
+      ${clone ? 'tabindex="-1" aria-hidden="true"' : ''}>
+      <span class="pc-top">
+        <span>${p.fileId} · ${p.year}</span>
+        <span class="pc-status${live ? '' : ' done'}"><span class="pip"></span>${p.status}</span>
+      </span>
+      <span class="pc-glyph" aria-hidden="true">${p.glyph}</span>
+      <span class="pc-domain">${escapeHtml(p.domain)}</span>
+      <span class="pc-title">${escapeHtml(p.title)}</span>
+      <span class="pc-summary">${escapeHtml(p.summary)}</span>
+      <span class="pc-chips">${p.chips.map(c => `<span class="chip">${escapeHtml(c)}</span>`).join('')}</span>
+      <span class="pc-foot"><span>OPEN FILE <span class="pc-arrow" aria-hidden="true">→</span></span><span class="pc-links">${linkHint}</span></span>
+    </button>`;
+}
+
+/* Two copies of the set make the loop seamless */
+scrollTrack.innerHTML =
+  projectOrder.map(k => cardHtml(k, false)).join('') +
+  projectOrder.map(k => cardHtml(k, true)).join('');
+
+let scrollPos = 0;
+let scrollVel = 0;
+const DRIFT = reducedMotion ? 0 : 0.6;
+let hoverHold = false;
+let modalHold = false;
+let dragging = false;
+
+function wrapPos() {
+  const half = scrollTrack.scrollWidth / 2;
+  if (!half) return;
+  scrollPos = ((scrollPos % half) + half) % half;
+}
+
+function animateScroll() {
+  if (!dragging && !modalHold) {
+    scrollVel *= 0.94;
+    const drift = hoverHold ? 0 : DRIFT;
+    scrollPos += drift + scrollVel;
+  }
+  wrapPos();
+  scrollTrack.style.transform = `translate3d(${-scrollPos}px, 0, 0)`;
+  requestAnimationFrame(animateScroll);
+}
+
+animateScroll();
+
+carousel.addEventListener('wheel', e => {
+  const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+  e.preventDefault();
+  scrollVel += d * 0.04;
+}, { passive: false });
+
+carousel.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') hoverHold = true; });
+carousel.addEventListener('pointerleave', () => { hoverHold = false; });
+
+/* Drag / flick */
+let dragStartX = 0;
+let dragStartPos = 0;
+let lastX = 0;
+let lastT = 0;
+let dragMoved = false;
+
+carousel.addEventListener('pointerdown', e => {
+  if (e.button !== 0) return;
+  dragging = true;
+  dragMoved = false;
+  dragStartX = lastX = e.clientX;
+  dragStartPos = scrollPos;
+  lastT = performance.now();
+  scrollVel = 0;
+});
+
+window.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  const dx = e.clientX - dragStartX;
+  if (!dragMoved && Math.abs(dx) > 6) {
+    dragMoved = true;
+    carousel.classList.add('dragging');
+    carousel.setPointerCapture?.(e.pointerId);
+  }
+  if (!dragMoved) return;
+  scrollPos = dragStartPos - dx;
+  const now = performance.now();
+  const dt = Math.max(now - lastT, 1);
+  scrollVel = -(e.clientX - lastX) / dt * 16;
+  lastX = e.clientX;
+  lastT = now;
+});
+
+function endDrag() {
+  if (!dragging) return;
+  dragging = false;
+  setTimeout(() => carousel.classList.remove('dragging'), 0);
+}
+
+window.addEventListener('pointerup', endDrag);
+window.addEventListener('pointercancel', endDrag);
+
+/* Keep keyboard focus visible inside the transformed track */
+carousel.addEventListener('focusin', e => {
+  const card = e.target.closest('.project-card');
+  if (!card) return;
+  hoverHold = true;
+  carousel.scrollLeft = 0;
+  const viewW = carousel.clientWidth;
+  const left = card.offsetLeft - scrollPos;
+  if (left < 24 || left + card.offsetWidth > viewW - 24) {
+    scrollPos = card.offsetLeft - (viewW - card.offsetWidth) / 2;
+  }
+});
+carousel.addEventListener('focusout', () => { hoverHold = false; });
+
+scrollTrack.addEventListener('click', e => {
+  const card = e.target.closest('.project-card');
+  if (!card || dragMoved) return;
+  openProjectModal(card.dataset.project, card);
+});
+
+/* ========= MODALS ========= */
+let lastFocus = null;
+
+function openModal(modal) {
+  lastFocus = document.activeElement;
+  modal.hidden = false;
+  requestAnimationFrame(() => modal.classList.add('open'));
+  modal.querySelector('.modal-close').focus({ preventScroll: true });
+}
+
+function closeModal(modal) {
+  if (modal.hidden) return;
+  modal.classList.remove('open');
+  setTimeout(() => { modal.hidden = true; }, reducedMotion ? 0 : 300);
+  if (lastFocus && document.contains(lastFocus)) lastFocus.focus({ preventScroll: true });
+}
+
+function anyModalOpen() {
+  return document.querySelector('.modal:not([hidden])') !== null;
+}
+
+document.querySelectorAll('.modal').forEach(modal => {
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(modal); });
+  modal.querySelector('.modal-close').addEventListener('click', () => closeModal(modal));
+  /* Trap Tab inside the open dialog */
+  modal.addEventListener('keydown', e => {
+    if (e.key !== 'Tab') return;
+    const f = [...modal.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')];
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+});
+
+/* Project modal */
 const projectModal = document.getElementById('project-modal');
 const pmInner = projectModal.querySelector('.pm-inner');
 
@@ -488,90 +661,64 @@ function openProjectModal(key) {
   const p = projectData[key];
   if (!p) return;
 
-  pmInner.style.setProperty('--pm-accent', p.accent);
-  pmInner.style.setProperty('--pm-rgb', p.rgb);
-
-  pmInner.querySelector('.pm-file-id').textContent = p.fileId;
+  pmInner.style.setProperty('--tint', p.tint);
+  pmInner.querySelector('.pm-file-id').textContent = `${p.fileId} · ${p.year}`;
   pmInner.querySelector('.pm-status-tag').textContent = p.status;
   pmInner.querySelector('.pm-glyph').textContent = p.glyph;
   pmInner.querySelector('.pm-domain-tag').textContent = p.domain;
   pmInner.querySelector('.pm-title').textContent = p.title;
   pmInner.querySelector('.pm-brief').textContent = p.brief;
-
-  const chipsEl = pmInner.querySelector('.pm-chips');
-  chipsEl.innerHTML = p.techstack.map(t => `<span class="pm-chip">${t}</span>`).join('');
-
-  const skillsEl = pmInner.querySelector('.pm-skills');
-  skillsEl.innerHTML = p.skills.map(s => `<div class="pm-skill">${s}</div>`).join('');
+  pmInner.querySelector('.pm-chips').innerHTML = p.techstack.map(t => `<span class="chip">${escapeHtml(t)}</span>`).join('');
+  pmInner.querySelector('.pm-skills').innerHTML = p.skills.map(s => `<span class="pm-skill">${escapeHtml(s)}</span>`).join('');
 
   const actionsEl = pmInner.querySelector('.pm-actions');
   const links = p.links || [];
   actionsEl.hidden = links.length === 0;
   actionsEl.innerHTML = links
-    .map(link => `<a class="pm-action" href="${link.href}" target="_blank" rel="noopener noreferrer">${link.label}</a>`)
+    .map(l => `<a class="btn${l.primary ? ' btn-primary' : ''}" href="${l.href}" target="_blank" rel="noopener noreferrer">${escapeHtml(l.label)} <span aria-hidden="true">↗</span></a>`)
     .join('');
 
-  scrollPaused = true;
-  projectModal.classList.add('open');
+  modalHold = true;
+  openModal(projectModal);
 }
 
 function closeProjectModal() {
-  projectModal.classList.remove('open');
-  scrollPaused = false;
+  modalHold = false;
+  closeModal(projectModal);
 }
 
-projectModal.addEventListener('click', e => {
-  if (e.target === projectModal) closeProjectModal();
-});
+projectModal.querySelector('.pm-close').addEventListener('click', () => { modalHold = false; });
+projectModal.addEventListener('click', e => { if (e.target === projectModal) modalHold = false; });
 
-projectModal.querySelector('.pm-close').addEventListener('click', closeProjectModal);
-
-/* ========= TRANSMISSION MODAL ========= */
+/* Transmission modal */
 const txModal = document.getElementById('tx-modal');
 const txmInner = txModal.querySelector('.txm-inner');
 
 function openTxModal(id) {
   const tx = transmissionData[id];
   if (!tx) return;
-
   txmInner.querySelector('.txm-id-tag').textContent = tx.id;
   txmInner.querySelector('.txm-date-tag').textContent = tx.stardate;
   txmInner.querySelector('.txm-main-title').textContent = tx.title;
   txmInner.querySelector('.txm-content').innerHTML = tx.content;
-
-  txModal.classList.add('open');
+  txmInner.querySelector('.txm-scroll').scrollTop = 0;
+  openModal(txModal);
 }
-
-function closeTxModal() {
-  txModal.classList.remove('open');
-}
-
-txModal.addEventListener('click', e => {
-  if (e.target === txModal) closeTxModal();
-});
-
-txModal.querySelector('.txm-close').addEventListener('click', closeTxModal);
-
-/* ========= CARD & READ LOG CLICKS ========= */
-document.querySelectorAll('.project-card').forEach(card => {
-  card.addEventListener('click', e => {
-    e.stopPropagation();
-    const key = card.dataset.project;
-    if (key) openProjectModal(key);
-  });
-
-  const p = projectData[card.dataset.project];
-  if (p) {
-    card.style.setProperty('--accent', p.accent);
-    card.style.setProperty('--accent-rgb', p.rgb);
-  }
-});
 
 document.querySelectorAll('.tx-read').forEach(btn => {
-  btn.addEventListener('click', e => {
-    e.stopPropagation();
-    const id = btn.dataset.tx;
-    if (id) openTxModal(id);
+  btn.addEventListener('click', () => openTxModal(btn.dataset.tx));
+});
+
+/* Cert lightbox */
+const certModal = document.getElementById('cert-modal');
+const certmImg = document.getElementById('certm-img');
+
+document.querySelectorAll('.cert-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const img = card.querySelector('img');
+    certmImg.src = card.dataset.src;
+    certmImg.alt = img ? img.alt : 'Certificate';
+    openModal(certModal);
   });
 });
 
@@ -579,146 +726,180 @@ document.querySelectorAll('.tx-read').forEach(btn => {
 const systemData = [
   {
     planet: 'MAHINDRA NEXUS',
-    sector: 'CORE WORLDS · SEC ALPHA-01',
-    tag: 'INTERN · RESEARCH',
+    when: '2025.12',
+    x: 12, y: 66,
+    sector: 'CORE WORLDS · ALPHA-01',
     role: 'Research Intern',
-    org: 'Mahindra.AI (Mahindra Group)',
-    dates: 'STARDATE 2025.12 — 2026.01',
+    org: 'Mahindra.AI (Mahindra Group) · Mumbai',
+    dates: '2025.12 → 2026.01',
     status: 'COMPLETED',
-    color: '#3bdcff',
-    rgb: '59,220,255',
+    tint: 'oklch(0.84 0.13 214)',
     logs: [
-      'Compared 15+ AI architectures (LLMs, SLMs, SLM+RAG) across cost, latency & reliability',
-      'Designed SLM-first strategy reducing projected inference latency by up to 70%',
-      'Built 2-phase agentic AI deployment roadmap balancing efficiency & compliance',
+      'Benchmarked 15+ AI architectures (LLMs, SLMs, SLM + RAG) on cost, latency, reliability and deployment constraints',
+      'Designed an SLM-first, modular agent strategy adopted as Mahindra\'s AI deployment blueprint',
+      'Cut projected inference latency by up to 70% while preserving domain-specific accuracy',
+      'Built the business case for 3–5× cost savings and a 2-phase roadmap presented to senior management',
     ],
-    chips: ['LLMs', 'SLMs', 'RAG', 'AI Strategy', 'Research'],
+    chips: ['LLMs', 'SLMs', 'RAG', 'Agentic AI', 'Strategy'],
   },
   {
     planet: 'CORUSCANT ACADEMY',
-    sector: 'MID RIM · SEC GAMMA-07',
-    tag: 'LEADERSHIP · ORIENTATION',
+    when: '2026.02',
+    x: 31, y: 28,
+    sector: 'MID RIM · GAMMA-07',
     role: 'Group Leader',
-    org: 'NTU CCDS — Transitional Orientation Program',
-    dates: 'STARDATE 2026.02 — PRESENT',
+    org: 'NTU CCDS · Transitional Orientation Programme',
+    dates: '2026.02 → PRESENT',
     status: 'ACTIVE',
-    color: '#d4a944',
-    rgb: '212,169,68',
+    tint: 'oklch(0.8 0.12 84)',
     logs: [
-      'Partnered with 10+ orientation leaders to manage logistics and schedules',
-      'Coordinated group activities and icebreakers for incoming CCDS students',
-      'Served as primary point of contact for the new CS cohort during transition',
+      'Partnered with 10+ orientation leaders on logistics and schedules for the incoming CCDS cohort',
+      'Ran group activities and icebreakers for new computing students',
+      'First point of contact for freshmen during their transition to NTU',
     ],
-    chips: ['Leadership', 'Coordination', 'NTU', 'CCDS'],
+    chips: ['Leadership', 'Coordination', 'CCDS'],
   },
   {
     planet: 'BESPIN HAVEN',
-    sector: 'OUTER RIM · SEC DELTA-12',
-    tag: 'LEADERSHIP · HALL',
+    when: '2026.02',
+    x: 49, y: 70,
+    sector: 'OUTER RIM · DELTA-12',
     role: 'Group Leader',
-    org: 'NTU Hall XIV — Freshmen Orientation Program',
-    dates: 'STARDATE 2026.02 — PRESENT',
+    org: 'NTU Hall XIV · Freshmen Orientation Programme',
+    dates: '2026.02 → PRESENT',
     status: 'ACTIVE',
-    color: '#4dffb4',
-    rgb: '77,255,180',
+    tint: 'oklch(0.86 0.15 165)',
     logs: [
-      'Partnered with 10+ orientation leaders and organisers across hall residence',
-      'Managed logistics, schedules, and icebreaker activities for freshmen cohort',
-      'Fostered community and camaraderie within Hall XIV during orientation week',
+      'Partnered with 10+ orientation leaders and organisers across the hall',
+      'Managed logistics, schedules and icebreakers for the freshmen cohort',
+      'Built community within Hall XIV during orientation week',
     ],
-    chips: ['Leadership', 'Event Management', 'NTU Hall XIV'],
+    chips: ['Leadership', 'Event Management', 'Hall XIV'],
+  },
+  {
+    planet: 'KESSEL EXCHANGE',
+    when: '2026.07',
+    x: 69, y: 30,
+    sector: 'OUTER RIM · KESSEL-12',
+    role: 'Quantitative Research Intern',
+    org: 'C22 × NTU veNTUre',
+    dates: '2026.07 → 2026.10',
+    status: 'COMPLETED',
+    tint: 'oklch(0.72 0.18 300)',
+    logs: [
+      'Built a leakage-safe Python modelling pipeline over 46,520 trades, 502 unique accounts and 34 campaigns',
+      'Caught close-time label leakage that had inflated 6 of 8 earlier findings',
+      'Pre-specified a Holm-corrected, single-look holdout and reported its null result (−$5.84/lot, CI spanning zero), rejecting six further candidates',
+      'Shipped a hash-verified, byte-reproducible prototype: Streamlit app, CLI and Python API with 182 tests',
+    ],
+    chips: ['Python', 'Statistics', 'Research Design', 'Streamlit', 'Reproducibility'],
+  },
+  {
+    planet: 'TEMPLE ARCHIVES',
+    when: '2026.09',
+    x: 88, y: 64,
+    sector: 'CORE WORLDS · ARCHIVE-01',
+    role: 'Vice President of Academics',
+    org: 'Google Developer Group on Campus NTU',
+    dates: '2026.09 → PRESENT',
+    status: 'ACTIVE',
+    tint: 'oklch(0.82 0.14 150)',
+    logs: [
+      'Lead academic programming for GDG on Campus NTU',
+      'Co-delivered "Data to Story" with Deep Learning Week NTU',
+      'Taught cloud cost analysis and Gemini API integration to CS students',
+    ],
+    chips: ['Leadership', 'Teaching', 'Gemini API', 'Cloud'],
   },
 ];
 
+const planetsEl = document.getElementById('planets');
 const starmapDetail = document.getElementById('starmap-detail');
+let activeSystem = 3;
 
-function renderSystemDetail(idx) {
+planetsEl.innerHTML = systemData.map((s, i) => `
+  <button class="planet-node${s.y > 55 ? ' label-above' : ''}${s.x < 20 ? ' edge-l' : s.x > 80 ? ' edge-r' : ''}" type="button" role="tab" id="planet-${i}"
+    aria-controls="starmap-detail" data-idx="${i}" style="left:${s.x}%;top:${s.y}%;--tint:${s.tint}">
+    <span class="planet-core" aria-hidden="true"></span>
+    <span class="planet-label">
+      <span class="planet-name">${s.planet}</span>
+      <span class="planet-when">${s.when}</span>
+    </span>
+  </button>`).join('');
+
+document.getElementById('route-line').setAttribute('points', systemData.map(s => `${s.x},${s.y}`).join(' '));
+
+const planetNodes = [...planetsEl.querySelectorAll('.planet-node')];
+
+function renderSystemDetail(idx, animated = true) {
   const sys = systemData[idx];
-  if (!sys || !starmapDetail) return;
-  starmapDetail.style.opacity = '0';
-  setTimeout(() => {
-    starmapDetail.style.setProperty('--detail-color', sys.color);
-    starmapDetail.style.setProperty('--detail-rgb', sys.rgb);
+  if (!sys) return;
+  activeSystem = idx;
+
+  planetNodes.forEach((n, i) => {
+    const on = i === idx;
+    n.classList.toggle('active', on);
+    n.setAttribute('aria-selected', on ? 'true' : 'false');
+    n.tabIndex = on ? 0 : -1;
+  });
+  starmapDetail.setAttribute('aria-labelledby', `planet-${idx}`);
+
+  const paint = () => {
+    starmapDetail.style.setProperty('--tint', sys.tint);
+    const active = sys.status === 'ACTIVE';
     starmapDetail.innerHTML = `
-      <div class="sd-header">
-        <span class="sd-planet-name">${sys.planet}</span>
-        <span class="sd-status${sys.status === 'ACTIVE' ? ' sd-status-active' : ''}">${sys.status}</span>
+      <div class="sd-top">
+        <span>${sys.sector}</span>
+        <span class="sd-status${active ? ' is-active' : ''}">${active ? '<span class="pip"></span>' : ''}${sys.status}</span>
       </div>
-      <div class="sd-sector">${sys.sector}</div>
-      <div class="sd-divider"></div>
-      <div class="sd-field">
-        <div class="sd-label">DESIGNATION</div>
-        <div class="sd-val">${sys.role}</div>
-      </div>
-      <div class="sd-field">
-        <div class="sd-label">COMMAND</div>
-        <div class="sd-val">${sys.org}</div>
-      </div>
-      <div class="sd-field">
-        <div class="sd-label">DEPLOYMENT WINDOW</div>
-        <div class="sd-val sd-val-mono">${sys.dates}</div>
-      </div>
-      <div class="sd-field">
-        <div class="sd-label">MISSION LOGS</div>
-        <div class="sd-logs">${sys.logs.map(l => `<div class="sd-log">${l}</div>`).join('')}</div>
-      </div>
-      <div class="sd-chips">${sys.chips.map(c => `<span class="sd-chip">${c}</span>`).join('')}</div>
-    `;
-    starmapDetail.style.opacity = '1';
-  }, 150);
+      <div class="sd-planet">${sys.planet}</div>
+      <h3 class="sd-role">${sys.role}</h3>
+      <div class="sd-org">${sys.org}</div>
+      <div class="sd-dates">${sys.dates}</div>
+      <ul class="sd-logs">${sys.logs.map(l => `<li>${escapeHtml(l)}</li>`).join('')}</ul>
+      <div class="sd-chips">${sys.chips.map(c => `<span class="chip">${escapeHtml(c)}</span>`).join('')}</div>
+      <div class="sd-nav">
+        <button type="button" data-step="-1" ${idx === 0 ? 'disabled style="visibility:hidden"' : ''}>← PREV SYSTEM</button>
+        <button type="button" data-step="1" ${idx === systemData.length - 1 ? 'disabled style="visibility:hidden"' : ''}>NEXT SYSTEM →</button>
+      </div>`;
+    starmapDetail.classList.remove('swapping');
+  };
+
+  if (!animated || reducedMotion) return paint();
+  starmapDetail.classList.add('swapping');
+  setTimeout(paint, 160);
 }
 
-document.querySelectorAll('.planet-node').forEach(node => {
-  node.addEventListener('click', e => {
+planetNodes.forEach((node, i) => {
+  node.addEventListener('click', () => renderSystemDetail(i));
+  node.addEventListener('keydown', e => {
+    const step = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
+    if (!step) return;
+    e.preventDefault();
     e.stopPropagation();
-    const idx = parseInt(node.dataset.idx, 10);
-    document.querySelectorAll('.planet-node').forEach(n => n.classList.remove('active'));
-    node.classList.add('active');
-    renderSystemDetail(idx);
+    const next = (i + step + systemData.length) % systemData.length;
+    renderSystemDetail(next);
+    planetNodes[next].focus();
   });
 });
 
-renderSystemDetail(0);
-
-/* ========= CERT LIGHTBOX ========= */
-const certModal = document.getElementById('cert-modal');
-const certmImg = document.getElementById('certm-img');
-
-function openCertModal(src, alt) {
-  certmImg.src = src;
-  certmImg.alt = alt || 'Certificate';
-  certModal.classList.add('open');
-}
-
-function closeCertModal() {
-  certModal.classList.remove('open');
-}
-
-certModal.addEventListener('click', e => {
-  if (e.target === certModal) closeCertModal();
+starmapDetail.addEventListener('click', e => {
+  const btn = e.target.closest('[data-step]');
+  if (btn) renderSystemDetail(activeSystem + parseInt(btn.dataset.step, 10));
 });
 
-certModal.querySelector('.certm-close').addEventListener('click', closeCertModal);
-
-document.querySelectorAll('.cert-card').forEach(card => {
-  card.addEventListener('click', e => {
-    e.stopPropagation();
-    const img = card.querySelector('.cert-face-back .cert-img');
-    if (img && img.getAttribute('src')) openCertModal(img.src, img.alt);
-  });
-});
-
+renderSystemDetail(activeSystem, false);
 
 /* ========= JEDI / SITH THEME TOGGLE ========= */
 const sysStatus = document.getElementById('sys-status');
 
-/* Walk a DOM subtree and collect all leaf elements that contain short text */
+/* Walk a DOM subtree and collect leaf elements that contain short text */
 function gatherLeafText(root) {
   const result = [];
-  const SKIP = new Set(['SCRIPT', 'STYLE', 'SVG', 'IMG', 'CANVAS', 'INPUT', 'BUTTON', 'VIDEO', 'IFRAME']);
+  const SKIP = new Set(['SCRIPT', 'STYLE', 'svg', 'IMG', 'CANVAS', 'INPUT', 'VIDEO', 'IFRAME']);
   function walk(el) {
     if (SKIP.has(el.tagName)) return;
-    if ([...el.children].length === 0) {
+    if (el.children.length === 0) {
       const text = el.textContent.trim();
       if (text.length > 0 && text.length < 120) result.push(el);
     } else {
@@ -739,7 +920,7 @@ function scrambleEl(el, finalText, duration) {
     elapsed += tick;
     const progress = Math.min(elapsed / duration, 1);
     el.textContent = finalText.split('').map(ch => {
-      if (' :·°—'.includes(ch)) return ch;
+      if (' :·°—→'.includes(ch)) return ch;
       return Math.random() < progress * 1.6
         ? ch
         : chars[Math.floor(Math.random() * chars.length)];
@@ -756,53 +937,36 @@ function triggerThemeSwitch(toSith) {
   document.body.dataset.switching = '1';
   document.body.dataset.flash = toSith ? 'sith' : 'jedi';
 
-  const DURATION = 680;
+  const DURATION = reducedMotion ? 0 : 680;
 
-  /* ── Scramble every piece of visible text ── */
-
-  /* sys-status resolves to the NEW label; everything else resolves back to itself */
   scrambleEl(sysStatus, toSith ? 'SYS: OFFLINE' : 'SYS: ONLINE', DURATION);
 
-  /* Always-visible chrome — nav console and coords */
-  const chromeSelectors = [
-    '.hero-coord.top-left-coord',
-    '.console-sys-id',
-    '#ct-heading', '#ct-speed', '#ct-sector', '#ct-status',
-  ];
-  chromeSelectors.forEach(sel => {
-    document.querySelectorAll(sel).forEach(el => scrambleEl(el, el.textContent, DURATION));
-  });
-  document.querySelectorAll('.ct-label').forEach(el => scrambleEl(el, el.textContent, DURATION));
-  document.querySelectorAll('.wp-label').forEach(el => scrambleEl(el, el.textContent, DURATION));
+  if (!reducedMotion) {
+    ['#hud-coord', '#ct-heading', '#ct-speed', '#ct-sector', '#ct-status', '.ct-label', '.wp-label']
+      .forEach(sel => document.querySelectorAll(sel).forEach(el => scrambleEl(el, el.textContent, DURATION)));
+    gatherLeafText(screens[currentScreen]).slice(0, 40)
+      .forEach(el => scrambleEl(el, el.textContent, DURATION));
+  }
 
-  /* Active screen — collect all short leaf-text elements and scramble them */
-  const screenLeaves = gatherLeafText(screens[currentScreen]).slice(0, 30);
-  screenLeaves.forEach(el => scrambleEl(el, el.textContent, DURATION));
-
-  /* ── Wave-blink flash on accent-colored elements ── */
   const WAVE1 = ['#sys-status', '#ct-speed'];
   const WAVE2 = ['#sys-status', '#ct-speed', '#ct-sector', '.console-ship'];
-
-  function addFlash(sels) {
-    sels.forEach(sel => document.querySelectorAll(sel).forEach(el => el.classList.add('t-flash')));
-  }
-  function removeFlash(sels) {
-    sels.forEach(sel => document.querySelectorAll(sel).forEach(el => el.classList.remove('t-flash')));
-  }
+  const addFlash = sels => sels.forEach(sel => document.querySelectorAll(sel).forEach(el => el.classList.add('t-flash')));
+  const removeFlash = sels => sels.forEach(sel => document.querySelectorAll(sel).forEach(el => el.classList.remove('t-flash')));
 
   addFlash(WAVE1);
   setTimeout(() => removeFlash(WAVE1), 90);
   setTimeout(() => addFlash(WAVE2), 170);
 
-  /* Theme switches while still in wave 2 flash */
   setTimeout(() => {
     document.body.classList.toggle('sith-mode', toSith);
+    sysStatus.setAttribute('aria-pressed', toSith ? 'true' : 'false');
+    starColor = getComputedStyle(document.body).getPropertyValue('--star').trim() || '#e8f4ff';
+    document.querySelector('meta[name="theme-color"]').content = toSith ? '#0a0404' : '#05070d';
     document.getElementById('favicon').href = toSith
       ? 'images/favicon-sith.svg'
       : 'images/favicon-jedi.svg';
-  }, 470);
+  }, reducedMotion ? 0 : 470);
 
-  /* Cleanup */
   setTimeout(() => {
     removeFlash(WAVE2);
     delete document.body.dataset.flash;
@@ -810,24 +974,67 @@ function triggerThemeSwitch(toSith) {
   }, DURATION + 20);
 }
 
-if (sysStatus) {
-  sysStatus.addEventListener('click', e => {
-    e.stopPropagation();
-    triggerThemeSwitch(!document.body.classList.contains('sith-mode'));
-  });
-}
+sysStatus.addEventListener('click', () => {
+  triggerThemeSwitch(!document.body.classList.contains('sith-mode'));
+});
 
-/* ESC closes modals; arrows navigate between screens */
+/* ========= KEYBOARD ========= */
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    closeProjectModal();
-    closeTxModal();
-    closeCertModal();
-  } else if (!introComplete) {
+    if (!projectModal.hidden) closeProjectModal();
+    closeModal(txModal);
+    closeModal(certModal);
     return;
-  } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-    if (currentScreen < screens.length - 1) jumpTo(currentScreen + 1);
-  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-    if (currentScreen > 0) jumpTo(currentScreen - 1);
+  }
+  if (!introComplete || anyModalOpen()) return;
+  if (e.target.closest('input, textarea, [role="tab"]')) return;
+  if (e.key === 'ArrowRight') {
+    jumpTo(currentScreen + 1);
+  } else if (e.key === 'ArrowLeft') {
+    jumpTo(currentScreen - 1);
+  } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    /* Up/Down only jump when the current screen has nothing left to scroll */
+    const s = screens[currentScreen];
+    const atBottom = s.scrollTop + s.clientHeight >= s.scrollHeight - 2;
+    const atTop = s.scrollTop <= 0;
+    if (e.key === 'ArrowDown' && atBottom) { e.preventDefault(); jumpTo(currentScreen + 1); }
+    if (e.key === 'ArrowUp' && atTop) { e.preventDefault(); jumpTo(currentScreen - 1); }
   }
 });
+
+/* ========= TOUCH SWIPE ========= */
+let touchX = 0;
+let touchY = 0;
+let touchIgnored = false;
+
+document.addEventListener('touchstart', e => {
+  const t = e.touches[0];
+  touchX = t.clientX;
+  touchY = t.clientY;
+  touchIgnored = !!e.target.closest('.carousel, .modal, .nav-console');
+}, { passive: true });
+
+document.addEventListener('touchend', e => {
+  if (touchIgnored || !introComplete || anyModalOpen()) return;
+  const t = e.changedTouches[0];
+  const dx = t.clientX - touchX;
+  const dy = t.clientY - touchY;
+  if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.6) {
+    jumpTo(currentScreen + (dx < 0 ? 1 : -1));
+  }
+}, { passive: true });
+
+/* ========= DEEP LINKS ========= */
+const initialHash = location.hash.slice(1);
+if (initialHash) {
+  const idx = screens.findIndex(s => s.id === initialHash);
+  if (idx > 0) {
+    const waitIntro = setInterval(() => {
+      if (!introComplete) return;
+      clearInterval(waitIntro);
+      setTimeout(() => jumpTo(idx), 400);
+    }, 100);
+  }
+}
+
+startIntro();

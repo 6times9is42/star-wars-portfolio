@@ -3,578 +3,287 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Yashvardhan | Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Yashvardhan Pattanashetti · Portfolio</title>
+  <meta name="description"
+    content="Yashvardhan Pattanashetti: computer science at NTU Singapore. Machine learning, quantitative research, and web tools, presented as a holographic transmission from a galaxy far, far away." />
+  <meta name="theme-color" content="#05070d" />
+  <meta property="og:title" content="Yashvardhan Pattanashetti · Portfolio" />
+  <meta property="og:description" content="CS @ NTU Singapore. ML systems, quant research, and things that ship." />
+  <meta property="og:type" content="website" />
 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@300;400;500;600&family=Space+Mono&family=Libre+Franklin:wght@300;400&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Libre+Franklin:wght@300&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20" />
+  <link rel="stylesheet" href="style.css?v=30" />
   <link rel="icon" id="favicon" href="images/favicon-jedi.svg" type="image/svg+xml" />
 </head>
 
 <body>
 
-  <div id="sw-intro">
+  <!-- OPENING CRAWL -->
+  <div id="sw-intro" aria-hidden="true">
     <div class="sw-content">
       <p id="sw-line1"></p>
       <p id="sw-line2"></p>
     </div>
+    <span class="sw-skip">PRESS ANY KEY TO SKIP</span>
   </div>
 
-  <canvas id="hyperspace"></canvas>
+  <canvas id="hyperspace" aria-hidden="true"></canvas>
+  <div class="scanlines" aria-hidden="true"></div>
 
-  <div class="hero-coord top-left-coord">0°N · 0°E · ALT 0</div>
-  <div class="hero-coord top-right-coord" id="sys-status">SYS: ONLINE</div>
+  <header class="hud-top">
+    <div class="hud-coord" id="hud-coord">1.35°N · 103.68°E · NTU</div>
+    <button class="hud-coord" id="sys-status" type="button" aria-pressed="false"
+      title="Switch allegiance (Jedi / Sith)">SYS: ONLINE</button>
+  </header>
 
-  <!-- HERO -->
-  <section id="hero" class="screen hero">
-    <div class="holo-wrap">
-      <div class="holo-sweep"></div>
-      <div class="holo-tx-label">
-        <span class="holo-blink-bar"></span>
-        INCOMING TRANSMISSION · ORIGIN: CORUSCANT SECTOR
-      </div>
-      <h1><span id="typed-text"></span></h1>
-      <div class="holo-ring-group">
-        <div class="holo-ring"></div>
-        <div class="holo-ring holo-ring-b"></div>
-        <div class="holo-ring holo-ring-c"></div>
-      </div>
-    </div>
-    <div class="hero-nav-hint">
-      <span class="hero-nav-key">←</span>
-      <span class="hero-nav-label">USE ARROW KEYS TO NAVIGATE</span>
-      <span class="hero-nav-key">→</span>
-    </div>
-  </section>
+  <main id="screens">
 
-  <!-- ABOUT -->
-  <section id="about" class="screen">
-    <div class="about-layout">
-      <div class="about-photo">
-        <div class="photo-frame">
-          <img class="photo-img" src="images/profilepic.jpeg" alt="Yashvardhan" />
-          <div class="photo-scan"></div>
+    <!-- 00 · HERO -->
+    <section id="hero" class="screen hero" aria-label="Introduction">
+      <div class="holo">
+        <div class="holo-rings" aria-hidden="true">
+          <span></span><span></span><span></span>
         </div>
-        <div class="photo-meta">
-          <div class="photo-meta-row"><span class="about-key">NAME</span><span class="about-val">Yashvardhan P.</span>
-          </div>
-          <div class="photo-meta-row"><span class="about-key">STATUS</span><span class="about-val">ACTIVE</span></div>
-          <div class="photo-meta-row"><span class="about-key">UNIT</span><span class="about-val">NTU · CS</span></div>
-        </div>
-      </div>
-      <div class="terminal">
-        <div class="terminal-header">
-          <span class="terminal-dot tdot-red"></span>
-          <span class="terminal-dot tdot-yellow"></span>
-          <span class="terminal-dot tdot-green"></span>
-          <span class="terminal-title">bash — yash@ntu: ~</span>
-        </div>
-        <div class="terminal-body">
-          <div id="terminal-output"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- EXPERIENCE -->
-  <section id="experience" class="screen">
-    <h2 class="section-title">CHARTED SYSTEMS</h2>
-    <div class="starmap-layout">
-
-      <div class="starmap-container">
-        <div class="map-coord map-coord-tl">SEC: CORE-ALPHA · 26°N · 143°E</div>
-        <div class="map-coord map-coord-tr">CHART: PERSONAL LOG #YP-01</div>
-        <div class="map-coord map-coord-bl">SCALE: 1:4,000,000 PARSEC</div>
-        <div class="map-coord map-coord-br">UPDATED: STARDATE 2025.08</div>
-
-        <svg class="starmap-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <defs>
-            <filter id="glow-line" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="0.8" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-          <line class="sml-a" x1="20" y1="29" x2="50" y2="68" stroke-width="0.4" stroke-dasharray="2.5 3.5"
-            filter="url(#glow-line)" />
-          <line class="sml-b" x1="50" y1="68" x2="80" y2="21" stroke-width="0.4" stroke-dasharray="2.5 3.5"
-            filter="url(#glow-line)" />
-        </svg>
-
-        <div class="planet-node active" data-idx="0" style="left:20%;top:29%;--pcolor:#3bdcff;--prgb:59,220,255">
-          <div class="planet-pulse" style="animation-delay:0s"></div>
-          <div class="planet-core"></div>
-          <div class="planet-label-wrap">
-            <div class="planet-name">MAHINDRA NEXUS</div>
-            <div class="planet-class">CLASS-R RESEARCH</div>
+        <div class="holo-body">
+          <p class="holo-tx"><span class="tx-bar" aria-hidden="true"></span>INCOMING TRANSMISSION · ORIGIN: SINGAPORE
+          </p>
+          <p class="holo-hello"><span id="typed-text"></span><span class="caret" aria-hidden="true"></span></p>
+          <h1 class="holo-name reveal">
+            <span class="name-first">YASHVARDHAN</span>
+            <span class="name-last">PATTANASHETTI</span>
+          </h1>
+          <p class="holo-lede reveal">Computer science at NTU Singapore. I build machine-learning systems, run quant
+            research honestly, and ship web tools people actually use.</p>
+          <p class="holo-now reveal"><span class="pip" aria-hidden="true"></span><span class="now-label">NOW</span>
+            VP Academics, Google Developer Group on Campus NTU</p>
+          <div class="holo-actions reveal">
+            <button class="btn btn-primary" type="button" data-goto="3">View mission files</button>
+            <button class="btn" type="button" data-goto="6">Open a channel</button>
           </div>
         </div>
+        <div class="holo-sweep" aria-hidden="true"></div>
+      </div>
+      <p class="hero-hint reveal" aria-hidden="true">
+        <kbd>←</kbd><span class="hint-keys">ARROW KEYS TO JUMP</span><span class="hint-touch">SWIPE TO JUMP</span><kbd>→</kbd>
+      </p>
+    </section>
 
-        <div class="planet-node" data-idx="1" style="left:50%;top:68%;--pcolor:#d4a944;--prgb:212,169,68">
-          <div class="planet-pulse" style="animation-delay:1s"></div>
-          <div class="planet-core"></div>
-          <div class="planet-label-wrap label-above">
-            <div class="planet-name">CORUSCANT ACADEMY</div>
-            <div class="planet-class">CLASS-L LEADERSHIP</div>
-          </div>
-        </div>
+    <!-- 01 · ABOUT -->
+    <section id="about" class="screen" aria-labelledby="about-title">
+      <div class="screen-inner">
+        <header class="sec-head">
+          <span class="sec-num">01</span>
+          <h2 id="about-title" class="sec-title">PILOT DOSSIER</h2>
+        </header>
+        <div class="about-grid">
+          <figure class="dossier">
+            <div class="photo-frame">
+              <img src="images/profilepic.jpeg" alt="Yashvardhan standing among palms on a sunlit terrace" />
+              <span class="photo-scan" aria-hidden="true"></span>
+              <span class="photo-tag">ID · YP-2109</span>
+            </div>
+            <dl class="dossier-rows">
+              <div><dt>NAME</dt><dd>Yashvardhan P.</dd></div>
+              <div><dt>BASE</dt><dd>Singapore</dd></div>
+              <div><dt>UNIT</dt><dd>NTU · CS · '29</dd></div>
+              <div><dt>STATUS</dt><dd class="dd-live">ACTIVE</dd></div>
+            </dl>
+          </figure>
 
-        <div class="planet-node" data-idx="2" style="left:80%;top:21%;--pcolor:#4dffb4;--prgb:77,255,180">
-          <div class="planet-pulse" style="animation-delay:2s"></div>
-          <div class="planet-core"></div>
-          <div class="planet-label-wrap">
-            <div class="planet-name">BESPIN HAVEN</div>
-            <div class="planet-class">CLASS-L LEADERSHIP</div>
+          <div class="terminal">
+            <div class="terminal-header">
+              <span class="tdot"></span><span class="tdot"></span><span class="tdot"></span>
+              <span class="terminal-title">yash@ntu: ~</span>
+            </div>
+            <div class="terminal-body" id="terminal-output" aria-live="polite"></div>
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="starmap-detail" id="starmap-detail"></div>
-
-    </div>
-  </section>
-
-  <section id="projects" class="screen">
-    <h2 class="section-title">PROJECTS</h2>
-
-    <div class="horizontal-scroll">
-      <div class="scroll-track" id="scroll-track">
-
-        <!-- === CARD SET A (originals) === -->
-        <div class="project-card" data-category="ml" data-project="fifa">
-          <div class="card-corner top-left"></div>
-          <div class="card-corner top-right"></div>
-          <div class="card-corner bottom-left"></div>
-          <div class="card-corner bottom-right"></div>
-          <div class="card-content">
-            <span class="card-category">ML · Data Science</span>
-            <h3>FIFA 2026 World Cup Predictor</h3>
-            <p>100,000-run Monte Carlo bracket simulator across all 48 nations, powered by XGBoost and squad data
-              scraped from Transfermarkt.</p>
-            <div class="card-chips">
-              <span class="chip">Python</span><span class="chip">XGBoost</span><span class="chip">SHAP</span><span
-                class="chip">Monte Carlo</span>
-            </div>
+    <!-- 02 · EXPERIENCE -->
+    <section id="experience" class="screen" aria-labelledby="exp-title">
+      <div class="screen-inner">
+        <header class="sec-head">
+          <span class="sec-num">02</span>
+          <h2 id="exp-title" class="sec-title">CHARTED SYSTEMS</h2>
+          <p class="sec-sub">Every place I've been stationed. Select a system to read its logs.</p>
+        </header>
+        <div class="starmap-layout">
+          <div class="starmap" id="starmap">
+            <span class="map-coord tl" aria-hidden="true">CHART · PERSONAL LOG YP-01</span>
+            <span class="map-coord br" aria-hidden="true">UPDATED · 2026.10</span>
+            <svg class="starmap-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <polyline id="route-line" fill="none" vector-effect="non-scaling-stroke" />
+            </svg>
+            <div class="planets" id="planets" role="tablist" aria-label="Experience"></div>
           </div>
-        </div>
-
-        <div class="project-card" data-category="ml" data-project="catscan">
-          <div class="card-corner top-left"></div>
-          <div class="card-corner top-right"></div>
-          <div class="card-corner bottom-left"></div>
-          <div class="card-corner bottom-right"></div>
-          <div class="card-content">
-            <span class="card-category">ML · Mobile</span>
-            <h3>CatScan</h3>
-            <p>Offline Android app for early cataract screening in rural India. 93% validation accuracy with sub-1s
-              on-device CNN inference.</p>
-            <div class="card-chips">
-              <span class="chip">PyTorch</span><span class="chip">SQL</span><span class="chip">CNN</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="project-card" data-category="math" data-project="padic">
-          <div class="card-corner top-left"></div>
-          <div class="card-corner top-right"></div>
-          <div class="card-corner bottom-left"></div>
-          <div class="card-corner bottom-right"></div>
-          <div class="card-content">
-            <span class="card-category">Math · Research</span>
-            <h3>p-Adic Calculus</h3>
-            <p>First-principles framework for differentiation on p-adic numbers. Proved p-adic analogues of 5 core
-              calculus rules.</p>
-            <div class="card-chips">
-              <span class="chip">Calculus</span><span class="chip">Number Theory</span><span
-                class="chip">Research</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="project-card" data-category="web" data-project="gigflow">
-          <div class="card-corner top-left"></div>
-          <div class="card-corner top-right"></div>
-          <div class="card-corner bottom-left"></div>
-          <div class="card-corner bottom-right"></div>
-          <div class="card-content">
-            <span class="card-category">Full-Stack · Dashboard</span>
-            <h3>GigFlow</h3>
-            <p>Production-grade MERN lead management dashboard with JWT/RBAC, server-side filtering, CSV export, and a
-              polished responsive UI.</p>
-            <div class="card-chips">
-              <span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Express</span><span
-                class="chip">MongoDB</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="project-card" data-category="web" data-project="portfolio">
-          <div class="card-corner top-left"></div>
-          <div class="card-corner top-right"></div>
-          <div class="card-corner bottom-left"></div>
-          <div class="card-corner bottom-right"></div>
-          <div class="card-content">
-            <span class="card-category">Web · Creative Coding</span>
-            <h3>Star Wars Portfolio</h3>
-            <p>Dark-themed personal portfolio with Star Wars aesthetics — glitch animations, holographic cards, Sith
-              mode easter egg, and Transmission Logs blog.</p>
-            <div class="card-chips">
-              <span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span
-                class="chip">Vercel</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="project-card" data-category="web" data-project="flint">
-          <div class="card-corner top-left"></div>
-          <div class="card-corner top-right"></div>
-          <div class="card-corner bottom-left"></div>
-          <div class="card-corner bottom-right"></div>
-          <div class="card-content">
-            <span class="card-category">Full-Stack · AI Tools</span>
-            <h3>Flint</h3>
-            <p>Free AI spend auditor for startup founders — input your tool stack, get an instant breakdown of
-              overspend, plan recommendations, and a shareable audit URL.</p>
-            <div class="card-chips">
-              <span class="chip">Next.js</span><span class="chip">TypeScript</span><span
-                class="chip">Supabase</span><span class="chip">Anthropic</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="project-card" data-category="web" data-project="ntu-atlas">
-          <div class="card-corner top-left"></div>
-          <div class="card-corner top-right"></div>
-          <div class="card-corner bottom-left"></div>
-          <div class="card-corner bottom-right"></div>
-          <div class="card-content">
-            <span class="card-category">Web · Campus Tool</span>
-            <h3>NTU Atlas</h3>
-            <p>Unified student dashboard for NTU — 60+ portal links, searchable club directory, topographic dark-mode UI
-              with animated grid and ambient glow.</p>
-            <div class="card-chips">
-              <span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span
-                class="chip">Vercel</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- === CARD SET B (duplicates for seamless loop) === -->
-        <div class="project-card" data-category="ml" data-project="fifa">
-          <div class="card-corner top-left"></div>
-          <div class="card-corner top-right"></div>
-          <div class="card-corner bottom-left"></div>
-          <div class="card-corner bottom-right"></div>
-          <div class="card-content">
-            <span class="card-category">ML · Data Science</span>
-            <h3>FIFA 2026 World Cup Predictor</h3>
-            <p>100,000-run Monte Carlo bracket simulator across all 48 nations, powered by XGBoost and squad data
-              scraped from Transfermarkt.</p>
-            <div class="card-chips">
-              <span class="chip">Python</span><span class="chip">XGBoost</span><span class="chip">SHAP</span><span
-                class="chip">Monte Carlo</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="project-card" data-category="ml" data-project="catscan">
-          <div class="card-corner top-left"></div>
-          <div class="card-corner top-right"></div>
-          <div class="card-corner bottom-left"></div>
-          <div class="card-corner bottom-right"></div>
-          <div class="card-content">
-            <span class="card-category">ML · Mobile</span>
-            <h3>CatScan</h3>
-            <p>Offline Android app for early cataract screening in rural India. 93% validation accuracy with sub-1s
-              on-device CNN inference.</p>
-            <div class="card-chips">
-              <span class="chip">PyTorch</span><span class="chip">SQL</span><span class="chip">CNN</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="project-card" data-category="math" data-project="padic">
-          <div class="card-corner top-left"></div>
-          <div class="card-corner top-right"></div>
-          <div class="card-corner bottom-left"></div>
-          <div class="card-corner bottom-right"></div>
-          <div class="card-content">
-            <span class="card-category">Math · Research</span>
-            <h3>p-Adic Calculus</h3>
-            <p>First-principles framework for differentiation on p-adic numbers. Proved p-adic analogues of 5 core
-              calculus rules.</p>
-            <div class="card-chips">
-              <span class="chip">Calculus</span><span class="chip">Number Theory</span><span
-                class="chip">Research</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="project-card" data-category="web" data-project="gigflow">
-          <div class="card-corner top-left"></div>
-          <div class="card-corner top-right"></div>
-          <div class="card-corner bottom-left"></div>
-          <div class="card-corner bottom-right"></div>
-          <div class="card-content">
-            <span class="card-category">Full-Stack · Dashboard</span>
-            <h3>GigFlow</h3>
-            <p>Production-grade MERN lead management dashboard with JWT/RBAC, server-side filtering, CSV export, and a
-              polished responsive UI.</p>
-            <div class="card-chips">
-              <span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Express</span><span
-                class="chip">MongoDB</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="project-card" data-category="web" data-project="portfolio">
-          <div class="card-corner top-left"></div>
-          <div class="card-corner top-right"></div>
-          <div class="card-corner bottom-left"></div>
-          <div class="card-corner bottom-right"></div>
-          <div class="card-content">
-            <span class="card-category">Web · Creative Coding</span>
-            <h3>Star Wars Portfolio</h3>
-            <p>Dark-themed personal portfolio with Star Wars aesthetics — glitch animations, holographic cards, Sith
-              mode easter egg, and Transmission Logs blog.</p>
-            <div class="card-chips">
-              <span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span
-                class="chip">Vercel</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="project-card" data-category="web" data-project="flint">
-          <div class="card-corner top-left"></div>
-          <div class="card-corner top-right"></div>
-          <div class="card-corner bottom-left"></div>
-          <div class="card-corner bottom-right"></div>
-          <div class="card-content">
-            <span class="card-category">Full-Stack · AI Tools</span>
-            <h3>Flint</h3>
-            <p>Free AI spend auditor for startup founders — input your tool stack, get an instant breakdown of
-              overspend, plan recommendations, and a shareable audit URL.</p>
-            <div class="card-chips">
-              <span class="chip">Next.js</span><span class="chip">TypeScript</span><span
-                class="chip">Supabase</span><span class="chip">Anthropic</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="project-card" data-category="web" data-project="ntu-atlas">
-          <div class="card-corner top-left"></div>
-          <div class="card-corner top-right"></div>
-          <div class="card-corner bottom-left"></div>
-          <div class="card-corner bottom-right"></div>
-          <div class="card-content">
-            <span class="card-category">Web · Campus Tool</span>
-            <h3>NTU Atlas</h3>
-            <p>Unified student dashboard for NTU — 60+ portal links, searchable club directory, topographic dark-mode UI
-              with animated grid and ambient glow.</p>
-            <div class="card-chips">
-              <span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span
-                class="chip">Vercel</span>
-            </div>
-          </div>
-        </div>
-
-
-      </div>
-    </div>
-  </section>
-
-  <!-- CERTIFICATIONS -->
-  <section id="certifications" class="screen">
-    <h2>CERTIFICATIONS</h2>
-    <div class="cert-grid">
-
-      <div class="cert-card" data-type="cs">
-        <div class="cert-inner">
-          <div class="cert-face cert-face-front">
-            <div class="cert-img-frame">
-              <img class="cert-img" src="images/google-logo.webp" alt="Google" />
-              <div class="cert-img-label">CERTIFICATE</div>
-            </div>
-            <div class="cert-org">Google</div>
-            <div class="cert-cred">Google AI</div>
-            <div class="cert-bottom-row">
-              <span class="cert-date">Apr 2026</span>
-              <span class="cert-verified">✓ VERIFIED</span>
-            </div>
-          </div>
-          <div class="cert-face cert-face-back">
-            <div class="cert-img-frame">
-              <img class="cert-img" src="images/certs/Coursera_CJBVNUGLIFO5-1.jpg"
-                alt="Google AI Professional Certificate" />
-              <div class="cert-img-label">CERTIFICATE</div>
-            </div>
-          </div>
+          <article class="starmap-detail" id="starmap-detail" role="tabpanel" aria-live="polite"></article>
         </div>
       </div>
+    </section>
 
-      <div class="cert-card" data-type="cs">
-        <div class="cert-inner">
-          <div class="cert-face cert-face-front">
-            <div class="cert-img-frame">
-              <img class="cert-img" src="images/google-logo.webp" alt="Google" />
-              <div class="cert-img-label">CERTIFICATE</div>
-            </div>
-            <div class="cert-org">Google</div>
-            <div class="cert-cred">AI Data Analysis</div>
-            <div class="cert-bottom-row">
-              <span class="cert-date">Apr 2026</span>
-              <span class="cert-verified">✓ VERIFIED</span>
-            </div>
-          </div>
-          <div class="cert-face cert-face-back">
-            <div class="cert-img-frame">
-              <img class="cert-img" src="images/certs/Coursera_6PTM2UBA3BDE-1.jpg"
-                alt="AI for Data Analysis Certificate" />
-              <div class="cert-img-label">CERTIFICATE</div>
-            </div>
-          </div>
+    <!-- 03 · PROJECTS -->
+    <section id="projects" class="screen" aria-labelledby="proj-title">
+      <div class="screen-inner screen-inner-wide">
+        <header class="sec-head">
+          <span class="sec-num">03</span>
+          <h2 id="proj-title" class="sec-title">MISSION FILES</h2>
+          <p class="sec-sub">Drag, scroll, or hover to hold the reel. Open a file for the full brief.</p>
+        </header>
+      </div>
+      <div class="carousel" id="carousel">
+        <div class="carousel-track" id="scroll-track"></div>
+      </div>
+    </section>
+
+    <!-- 04 · CERTIFICATIONS -->
+    <section id="certifications" class="screen" aria-labelledby="cert-title">
+      <div class="screen-inner">
+        <header class="sec-head">
+          <span class="sec-num">04</span>
+          <h2 id="cert-title" class="sec-title">CLEARANCES</h2>
+          <p class="sec-sub">Google Career Certificate Scholar. Select a record to inspect the original.</p>
+        </header>
+        <div class="cert-grid">
+          <button class="cert-card" type="button" data-src="images/certs/Coursera_CJBVNUGLIFO5-1.jpg">
+            <img src="images/certs/Coursera_CJBVNUGLIFO5-1.jpg" alt="Google AI certificate" loading="lazy" />
+            <span class="cert-meta">
+              <span class="cert-org">GOOGLE</span>
+              <span class="cert-name">Google AI</span>
+              <span class="cert-date">APR 2026 · <span class="ok">VERIFIED</span></span>
+            </span>
+          </button>
+          <button class="cert-card" type="button" data-src="images/certs/Coursera_6PTM2UBA3BDE-1.jpg">
+            <img src="images/certs/Coursera_6PTM2UBA3BDE-1.jpg" alt="AI for Data Analysis certificate"
+              loading="lazy" />
+            <span class="cert-meta">
+              <span class="cert-org">GOOGLE</span>
+              <span class="cert-name">AI Data Analysis</span>
+              <span class="cert-date">APR 2026 · <span class="ok">VERIFIED</span></span>
+            </span>
+          </button>
+          <button class="cert-card" type="button" data-src="images/certs/Coursera_3YPL4WTJLC8N-1.jpg">
+            <img src="images/certs/Coursera_3YPL4WTJLC8N-1.jpg" alt="AI for App Building certificate"
+              loading="lazy" />
+            <span class="cert-meta">
+              <span class="cert-org">GOOGLE</span>
+              <span class="cert-name">AI App Building</span>
+              <span class="cert-date">APR 2026 · <span class="ok">VERIFIED</span></span>
+            </span>
+          </button>
+          <button class="cert-card" type="button" data-src="images/certs/Coursera_FMMIXSFTRXF4-1.jpg">
+            <img src="images/certs/Coursera_FMMIXSFTRXF4-1.jpg" alt="Foundations of Cybersecurity certificate"
+              loading="lazy" />
+            <span class="cert-meta">
+              <span class="cert-org">GOOGLE</span>
+              <span class="cert-name">Foundations of Cybersecurity</span>
+              <span class="cert-date">MAY 2026 · <span class="ok">VERIFIED</span></span>
+            </span>
+          </button>
+          <button class="cert-card" type="button" data-src="images/certs/Coursera_YLYR9CFEXNR3-1.jpg">
+            <img src="images/certs/Coursera_YLYR9CFEXNR3-1.jpg" alt="Foundations of Data Science certificate"
+              loading="lazy" />
+            <span class="cert-meta">
+              <span class="cert-org">GOOGLE</span>
+              <span class="cert-name">Foundations of Data Science</span>
+              <span class="cert-date">MAY 2026 · <span class="ok">VERIFIED</span></span>
+            </span>
+          </button>
         </div>
       </div>
+    </section>
 
-      <div class="cert-card" data-type="quant">
-        <div class="cert-inner">
-          <div class="cert-face cert-face-front">
-            <div class="cert-img-frame">
-              <img class="cert-img" src="images/google-logo.webp" alt="Google" />
-              <div class="cert-img-label">CERTIFICATE</div>
-            </div>
-            <div class="cert-org">Google</div>
-            <div class="cert-cred">AI App Building</div>
-            <div class="cert-bottom-row">
-              <span class="cert-date">Apr 2026</span>
-              <span class="cert-verified">✓ VERIFIED</span>
-            </div>
-          </div>
-          <div class="cert-face cert-face-back">
-            <div class="cert-img-frame">
-              <img class="cert-img" src="images/certs/Coursera_3YPL4WTJLC8N-1.jpg"
-                alt="AI for App Building Certificate" />
-              <div class="cert-img-label">CERTIFICATE</div>
-            </div>
-          </div>
+    <!-- 05 · BLOG -->
+    <section id="blog" class="screen" aria-labelledby="blog-title">
+      <div class="screen-inner screen-inner-narrow">
+        <header class="sec-head">
+          <span class="sec-num">05</span>
+          <h2 id="blog-title" class="sec-title">TRANSMISSIONS</h2>
+          <p class="sec-sub">Long-form signals. Philosophy, maths, and whatever else won't leave my head.</p>
+        </header>
+        <div class="transmissions">
+          <article class="transmission">
+            <header class="tx-head">
+              <span class="tx-id">TX #001</span>
+              <time class="tx-date" datetime="2026-05-25">STARDATE 2026.05.25</time>
+            </header>
+            <h3 class="tx-title">The Ship of Theseus</h3>
+            <p class="tx-excerpt">If all the parts of a ship are replaced one by one, is it still the same ship? I
+              think this problem is far more fascinating when applied to personal identity.</p>
+            <footer class="tx-foot">
+              <span class="tx-status"><span class="pip" aria-hidden="true"></span>LIVE · 4 MIN READ</span>
+              <button class="tx-read" type="button" data-tx="001">Read log <span aria-hidden="true">→</span></button>
+            </footer>
+          </article>
+          <p class="tx-incoming"><span class="tx-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+            Signal incoming. More transmissions pending.</p>
         </div>
       </div>
+    </section>
 
-      <div class="cert-card" data-type="cs">
-        <div class="cert-inner">
-          <div class="cert-face cert-face-front">
-            <div class="cert-img-frame">
-              <img class="cert-img" src="images/google-logo.webp" alt="Google" />
-              <div class="cert-img-label">CERTIFICATE</div>
-            </div>
-            <div class="cert-org">Google</div>
-            <div class="cert-cred">Foundations of Cybersecurity</div>
-            <div class="cert-bottom-row">
-              <span class="cert-date">May 2026</span>
-              <span class="cert-verified">✓ VERIFIED</span>
-            </div>
-          </div>
-          <div class="cert-face cert-face-back">
-            <div class="cert-img-frame">
-              <img class="cert-img" src="images/certs/Coursera_FMMIXSFTRXF4-1.jpg"
-                alt="Foundations of Cybersecurity Certificate" />
-              <div class="cert-img-label">CERTIFICATE</div>
-            </div>
-          </div>
+    <!-- 06 · CONTACT -->
+    <section id="contact" class="screen" aria-labelledby="contact-title">
+      <div class="screen-inner screen-inner-narrow">
+        <header class="sec-head">
+          <span class="sec-num">06</span>
+          <h2 id="contact-title" class="sec-title">OPEN A CHANNEL</h2>
+        </header>
+        <div class="comms">
+          <p class="comms-lede">Internships, research, a hackathon team, or an argument about the Ship of Theseus.
+            My frequency is open.</p>
+          <a class="comms-primary" href="mailto:yash.hp21@gmail.com">
+            <span class="comms-k">TRANSMIT TO</span>
+            <span class="comms-v">yash.hp21@gmail.com</span>
+            <span class="comms-arrow" aria-hidden="true">→</span>
+          </a>
+          <ul class="comms-list">
+            <li><a href="https://www.linkedin.com/in/yashvardhan2109" target="_blank" rel="noopener noreferrer">
+                <span class="comms-k">LINKEDIN</span><span class="comms-v">/in/yashvardhan2109</span><span
+                  class="comms-arrow" aria-hidden="true">↗</span></a></li>
+            <li><a href="https://github.com/6times9is42" target="_blank" rel="noopener noreferrer">
+                <span class="comms-k">GITHUB</span><span class="comms-v">@6times9is42</span><span class="comms-arrow"
+                  aria-hidden="true">↗</span></a></li>
+            <li><span class="comms-static"><span class="comms-k">LOCATION</span><span class="comms-v">Singapore ·
+                  GMT+8</span></span></li>
+          </ul>
+          <p class="comms-sign">May the Force be with you.</p>
         </div>
       </div>
+    </section>
 
-      <div class="cert-card" data-type="quant">
-        <div class="cert-inner">
-          <div class="cert-face cert-face-front">
-            <div class="cert-img-frame">
-              <img class="cert-img" src="images/google-logo.webp" alt="Google" />
-              <div class="cert-img-label">CERTIFICATE</div>
-            </div>
-            <div class="cert-org">Google</div>
-            <div class="cert-cred">Foundations of Data Science</div>
-            <div class="cert-bottom-row">
-              <span class="cert-date">May 2026</span>
-              <span class="cert-verified">✓ VERIFIED</span>
-            </div>
-          </div>
-          <div class="cert-face cert-face-back">
-            <div class="cert-img-frame">
-              <img class="cert-img" src="images/certs/Coursera_YLYR9CFEXNR3-1.jpg"
-                alt="Foundations of Data Science Certificate" />
-              <div class="cert-img-label">CERTIFICATE</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- BLOG -->
-  <section id="blog" class="screen">
-    <h2>TRANSMISSIONS</h2>
-    <div class="transmissions">
-
-      <div class="transmission-card">
-        <div class="tx-header">
-          <span class="tx-id">[TRANSMISSION #001]</span>
-          <span class="tx-date">STARDATE 2026.05.25</span>
-        </div>
-        <h3 class="tx-title">The Ship of Theseus</h3>
-        <p class="tx-excerpt">
-          If all the parts of a ship are replaced one by one, is it still the same ship? I think this problem is far
-          more fascinating when applied to personal identity.
-        </p>
-        <div class="tx-footer">
-          <span class="tx-status"><span class="tx-dot"></span>STATUS: LIVE</span>
-          <span class="tx-read" data-tx="001">READ LOG →</span>
-        </div>
-      </div>
-
-      <div class="tx-incoming">
-        <span>[ SIGNAL INCOMING — MORE TRANSMISSIONS PENDING ]</span>
-      </div>
-
-    </div>
-  </section>
+  </main>
 
   <!-- PROJECT MODAL -->
-  <div id="project-modal">
-    <div class="pm-inner">
-      <div class="pm-c tl"></div>
-      <div class="pm-c tr"></div>
-      <div class="pm-c bl"></div>
-      <div class="pm-c br"></div>
-      <div class="pm-header">
+  <div id="project-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="pm-title" hidden>
+    <div class="modal-panel pm-inner">
+      <header class="modal-head">
         <span class="pm-file-id"></span>
         <span class="pm-status-tag"></span>
-        <button class="pm-close">[×]</button>
-      </div>
+        <button class="modal-close pm-close" type="button" aria-label="Close">CLOSE ✕</button>
+      </header>
       <div class="pm-body">
-        <div class="pm-visual">
-          <div class="pm-scan-line"></div>
-          <div class="pm-glyph"></div>
+        <div class="pm-visual" aria-hidden="true">
+          <span class="pm-scan"></span>
+          <span class="pm-glyph"></span>
           <span class="pm-vis-label">MISSION FILE</span>
         </div>
         <div class="pm-details">
-          <div><span class="pm-domain-tag"></span></div>
-          <h2 class="pm-title"></h2>
+          <span class="pm-domain-tag"></span>
+          <h2 class="pm-title" id="pm-title"></h2>
+          <p class="pm-brief"></p>
           <div class="pm-section">
-            <div class="pm-label">TECH STACK</div>
+            <h3 class="pm-label">TECH STACK</h3>
             <div class="pm-chips"></div>
           </div>
           <div class="pm-section">
-            <div class="pm-label">SKILL SET</div>
+            <h3 class="pm-label">SKILL SET</h3>
             <div class="pm-skills"></div>
-          </div>
-          <div class="pm-section">
-            <div class="pm-label">MISSION BRIEF</div>
-            <p class="pm-brief"></p>
           </div>
           <div class="pm-actions" hidden></div>
         </div>
@@ -583,94 +292,67 @@
   </div>
 
   <!-- TRANSMISSION MODAL -->
-  <div id="tx-modal">
-    <div class="txm-inner">
-      <div class="txm-header">
+  <div id="tx-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="txm-title" hidden>
+    <div class="modal-panel txm-inner">
+      <header class="modal-head">
         <span class="txm-id-tag"></span>
         <span class="txm-date-tag"></span>
-        <button class="txm-close">[×]</button>
-      </div>
+        <button class="modal-close txm-close" type="button" aria-label="Close">CLOSE ✕</button>
+      </header>
       <div class="txm-scroll">
-        <h3 class="txm-main-title"></h3>
+        <h3 class="txm-main-title" id="txm-title"></h3>
         <div class="txm-content"></div>
-      </div>
-      <div class="txm-footer">
-        <span class="txm-sig"><span class="txm-dot"></span>SIGNAL AUTHENTICATED</span>
-        <span class="txm-eof">[ END TRANSMISSION ]</span>
+        <p class="txm-eof">[ END TRANSMISSION ]</p>
       </div>
     </div>
   </div>
 
   <!-- CERT LIGHTBOX -->
-  <div id="cert-modal">
-    <div class="certm-inner">
-      <div class="certm-header">
+  <div id="cert-modal" class="modal" role="dialog" aria-modal="true" aria-label="Certificate" hidden>
+    <div class="modal-panel certm-inner">
+      <header class="modal-head">
         <span class="certm-label">CERTIFICATE RECORD</span>
-        <button class="certm-close">[×]</button>
-      </div>
-      <div class="certm-body">
-        <img id="certm-img" src="" alt="Certificate" />
-      </div>
+        <button class="modal-close certm-close" type="button" aria-label="Close">CLOSE ✕</button>
+      </header>
+      <img id="certm-img" src="" alt="Certificate" />
     </div>
   </div>
 
   <!-- BRIDGE CONSOLE -->
-  <nav class="nav-console" id="nav-console">
-    <div class="console-bolt console-bolt-tl"></div>
-    <div class="console-bolt console-bolt-tr"></div>
-    <div class="console-bolt console-bolt-bl"></div>
-    <div class="console-bolt console-bolt-br"></div>
-    <div class="console-topstrip">
-      <span class="console-sys-id">NAVIGATION COMPUTER · BRIDGE CONTROL · SYS v2.1</span>
-      <span class="console-autopilot-tag"><span class="autopilot-pip"></span>AUTOPILOT ENGAGED</span>
+  <nav class="nav-console" id="nav-console" aria-label="Sections">
+    <div class="console-telem console-telem-left" aria-hidden="true">
+      <span class="ct-label">HEADING</span>
+      <span class="ct-val" id="ct-heading">000°</span>
+      <span class="ct-label">SPEED</span>
+      <span class="ct-val ct-accent" id="ct-speed">SUB-LIGHT</span>
     </div>
-    <div class="console-main-row">
-      <div class="console-telem console-telem-left">
-        <span class="ct-label">HEADING</span>
-        <span class="ct-val" id="ct-heading">000°</span>
-        <span class="ct-label">SPEED</span>
-        <span class="ct-val ct-val-cyan" id="ct-speed">SUB-LIGHT</span>
-      </div>
-      <div class="console-track-wrap">
-        <div class="console-track" id="console-track">
-          <div class="console-track-line"></div>
-          <div class="console-ship" id="console-ship">▲</div>
-          <div class="console-wp active" data-idx="0">
-            <div class="wp-pip"></div>
-            <span class="wp-label">HOME</span>
-          </div>
-          <div class="console-wp" data-idx="1">
-            <div class="wp-pip"></div>
-            <span class="wp-label">ABOUT</span>
-          </div>
-          <div class="console-wp" data-idx="2">
-            <div class="wp-pip"></div>
-            <span class="wp-label">EXP</span>
-          </div>
-          <div class="console-wp" data-idx="3">
-            <div class="wp-pip"></div>
-            <span class="wp-label">PROJ</span>
-          </div>
-          <div class="console-wp" data-idx="4">
-            <div class="wp-pip"></div>
-            <span class="wp-label">CERTS</span>
-          </div>
-          <div class="console-wp" data-idx="5">
-            <div class="wp-pip"></div>
-            <span class="wp-label">BLOG</span>
-          </div>
-        </div>
-      </div>
-      <div class="console-telem console-telem-right">
-        <span class="ct-label">SECTOR</span>
-        <span class="ct-val ct-val-gold" id="ct-sector">ALPHA-01</span>
-        <span class="ct-label">STATUS</span>
-        <span class="ct-val" id="ct-status">NOMINAL</span>
-      </div>
+    <div class="console-track" id="console-track">
+      <span class="console-track-line" aria-hidden="true"></span>
+      <span class="console-ship" id="console-ship" aria-hidden="true">▲</span>
+      <button class="console-wp active" type="button" data-idx="0"><span class="wp-pip"></span><span
+          class="wp-label">HOME</span></button>
+      <button class="console-wp" type="button" data-idx="1"><span class="wp-pip"></span><span
+          class="wp-label">ABOUT</span></button>
+      <button class="console-wp" type="button" data-idx="2"><span class="wp-pip"></span><span
+          class="wp-label">EXP</span></button>
+      <button class="console-wp" type="button" data-idx="3"><span class="wp-pip"></span><span
+          class="wp-label">PROJ</span></button>
+      <button class="console-wp" type="button" data-idx="4"><span class="wp-pip"></span><span
+          class="wp-label">CERTS</span></button>
+      <button class="console-wp" type="button" data-idx="5"><span class="wp-pip"></span><span
+          class="wp-label">BLOG</span></button>
+      <button class="console-wp" type="button" data-idx="6"><span class="wp-pip"></span><span
+          class="wp-label">COMMS</span></button>
+    </div>
+    <div class="console-telem console-telem-right" aria-hidden="true">
+      <span class="ct-label">SECTOR</span>
+      <span class="ct-val ct-gold" id="ct-sector">ALPHA-01</span>
+      <span class="ct-label">STATUS</span>
+      <span class="ct-val" id="ct-status">NOMINAL</span>
     </div>
   </nav>
 
-  <script src="script.js?v=20"></script>
+  <script src="script.js?v=30"></script>
 </body>
 
 </html>
