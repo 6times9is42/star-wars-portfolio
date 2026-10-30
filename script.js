@@ -345,7 +345,7 @@ consoleWps.forEach(wp => {
 window.addEventListener('load', () => positionShip(currentScreen, false));
 
 /* ========= PROJECT DATA ========= */
-const projectOrder = ['fifa', 'flint', 'ntu-atlas', 'catscan', 'gigflow', 'padic', 'portfolio'];
+const projectOrder = ['fifa', 'flint', 'ntu-atlas', 'catscan', 'gigflow', 'padic', 'hdb', 'portfolio'];
 
 const projectData = {
   fifa: {
@@ -450,6 +450,23 @@ const projectData = {
     techstack: ['LaTeX', 'Formal Proofs'],
     skills: ['Real & p-adic Analysis', 'Number Theory', 'Mathematical Writing', 'Research'],
     brief: 'Calculus usually lives on the real numbers. This paper rebuilds it from first principles on the p-adic numbers, where distance is measured by divisibility and the ultrametric inequality makes every triangle isosceles. We formally define limits, continuity and derivatives via the p-adic ultrametric, prove p-adic analogues of five core rules (product rule, chain rule, mean value theorem, L\'Hôpital\'s rule and Taylor expansion), and study real-valued representations through the canonical map, which exposes where p-adic behaviour departs from classical analysis.'
+  },
+  hdb: {
+    fileId: 'FILE-008',
+    year: '2026',
+    title: 'HDB Decision Support Platform',
+    domain: 'Web · Civic Data · Team Project',
+    tint: 'oklch(0.82 0.14 25)',
+    glyph: '⌂',
+    status: 'COMPLETED',
+    summary: 'A Flask app for comparing Singapore HDB resale flats and BTO launches. I owned the server-rendered front end.',
+    chips: ['Jinja2', 'JavaScript', 'Flask', 'SQLite'],
+    techstack: ['Python', 'Flask', 'Jinja2', 'SQLite', 'Bootstrap', 'JavaScript', 'Leaflet', 'scikit-learn'],
+    skills: ['Server-Rendered Frontend', 'Template Architecture', 'Debugging', 'Data Verification', 'Git Collaboration'],
+    brief: 'A six-person SC2006 Software Engineering project at NTU: a Flask app for comparing Singapore HDB resale flats and BTO launches. A regression model trained on ~240,000 public resale transactions prices each flat, and a 0–5 locality score rates its location by distance to the nearest MRT, school, supermarket and park — weighted by the user\'s own ranking of what matters. I owned the server-rendered templates, holding the front end to the design spec while the backend shifted underneath it, and built the drag-to-rank preferences form on native drag and drop with no library. Two bugs worth the hunt: Jinja\'s round filter rendered 4.5 as four stars because Python rounds halves to even, and a clash between account-based data hiding and the redesigned amenity section was 500-ing every property page for logged-out users.',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/SC2006-AY2026Sem1/snotsauce', primary: true }
+    ]
   },
   portfolio: {
     fileId: 'FILE-007',
